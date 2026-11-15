@@ -12,7 +12,7 @@ def opt(name, default):
 ROOT = os.path.abspath(opt('--root', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 OUT, BODY = opt('--out', 'result.json'), opt('--body', 'body.md')
 SITE = 'https://rockyhockbaptistchurch.github.io/rhbc-website/'
-ADMIN = os.environ.get('ADMIN', 'hctynch')
+ADMIN = os.environ.get('ADMIN', 'RockyHockBaptistChurch')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass

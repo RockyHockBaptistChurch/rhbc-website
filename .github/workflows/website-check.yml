@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ADMIN: hctynch            # GitHub username of the site administrator (gets the emails)
+  ADMIN: RockyHockBaptistChurch   # GitHub account of the site administrator; GitHub emails its notification address (tech@rhbce.org)
   LABEL: website-error
 
 jobs:
@@ -40,12 +40,16 @@ jobs:
             /startup-test.html
             /data/
             /_source/tests/site_check.py
+            /_source/tests/make_startup_test.py
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install a browser
         run: pip install playwright==1.48.0 && python -m playwright install --with-deps chromium
+      - name: Make the demo page (Demo only; never committed)
+        if: ${{ inputs.demo }}
+        run: python3 _source/tests/make_startup_test.py index.html startup-test.html
       - name: Check the website
         run: python3 _source/tests/site_check.py --root . --out result.json --body body.md ${{ inputs.demo && '--demo' || '' }}
       - name: Email the site administrator (open, update or close the issue)
