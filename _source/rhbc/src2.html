@@ -1047,7 +1047,7 @@ textarea{min-height:84px;resize:vertical}
           <ul class="ev-list" id="dayList"></ul>
         </div>
         <div class="panel">
-          <p class="eyebrow">Next eight weeks</p>
+          <p class="eyebrow">Next Four Weeks</p>
           <ul class="ev-list" id="upList"></ul>
         </div>
       </div>
@@ -2053,7 +2053,7 @@ textarea{min-height:84px;resize:vertical}
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg13Title">
     <h3 id="dlg13Title">Recurring Events</h3>
     <p class="meta single-only" id="m-lead"></p>
-    <p class="meta multi-only">Events that repeat every month, like the 4th Monday, the 5th Sunday or the 15th. They show on the calendar, in Next Eight Weeks and on Our Schedule. Click Edit on any event to change it.</p>
+    <p class="meta multi-only">Events that repeat every month, like the 4th Monday, the 5th Sunday or the 15th. They show on the calendar, in Next Four Weeks and on Our Schedule. Click Edit on any event to change it.</p>
     <form id="mForm" novalidate style="display:grid;gap:14px">
       <div id="mList" class="nlist"></div>
       <button class="btn ghost multi-only" type="button" id="mAdd" style="justify-self:start">+ Add Recurring Event</button>
@@ -2609,12 +2609,12 @@ function renderDay(){
 }
 function renderUp(){
   const ul=$("upList");ul.replaceChildren();
-  const end=new Date(now);end.setDate(end.getDate()+56);const ek=keyOf(end);
+  const end=new Date(now);end.setDate(end.getDate()+27);const ek=keyOf(end);
   const evs=showOther?state.events.filter(e=>e.date>=TODAY&&e.date<=ek&&evShown(e)):[];
-  if(showMonthly){const d=fromKey(TODAY);for(let i=0;i<=56;i++){const k=keyOf(d);for(const m of state.monthly||[])if(m.title&&evShown(m)&&moOn(m,k))evs.push(moInst(m,k));d.setDate(d.getDate()+1)}}
+  if(showMonthly){const d=fromKey(TODAY);for(let i=0;i<=27;i++){const k=keyOf(d);for(const m of state.monthly||[])if(m.title&&evShown(m)&&moOn(m,k))evs.push(moInst(m,k));d.setDate(d.getDate()+1)}}
   if(showWeekly)for(const c of state.schedChanges||[])if(c.date>=TODAY&&c.date<=ek){const it=changeItem(c);if(it)evs.push(it)}
   evs.sort(sortEv);
-  if(!evs.length)ul.append(el("li",{className:"meta",style:"padding-top:8px",textContent:"Nothing in the next eight weeks with the filters you’ve chosen."}));
+  if(!evs.length)ul.append(el("li",{className:"meta",style:"padding-top:8px",textContent:"Nothing in the next four weeks with the filters you’ve chosen."}));
   for(const e of evs)ul.append(evRow(e,true));
 }
 function renderAll(){safe("Weekly Schedule",renderWeekly,null,"schedule");safe("Live Stream",renderLive,null,"worship");safe("Staff",renderStaff,"staffList");safe("Special Events",renderSpecials,"specialList");safe("Photos",renderPhotos,"gallery");safe("Notices",renderNotice,null,"");safe("Coming Up",renderNext,"nextUp");safe("Bulletins and Newsletters",renderDocs,null,"bulletins");safe("Job Openings",renderJobs,"jobList");safe("Calendar Filters",renderFilters,"filters");safe("Calendar",renderGrid,"grid");safe("Selected Day",renderDay,"dayList");safe("Upcoming Events",renderUp,"upList");if(typeof renderServices==="function")safe("Worship Services",renderServices,"svcList");
