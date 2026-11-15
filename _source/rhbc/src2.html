@@ -4012,10 +4012,11 @@ $("saveBtn").onclick=async()=>{
 };
 (function(){let p=null;try{p=sessionStorage.getItem(PENDING)}catch(e){}
   if(!p)return;try{sessionStorage.removeItem(PENDING)}catch(e){}
+  let why=null;try{why=sessionStorage.getItem(PENDING+"-why");sessionStorage.removeItem(PENDING+"-why")}catch(e){}
   if(p===JSON.stringify(SAVED))return;
   let parsed;try{parsed=JSON.parse(p)}catch(e){return}
-  const box=el("div",{className:"restore"},el("span",{textContent:"Your last calendar edits weren’t saved because someone else saved first."}));
-  const r=el("button",{type:"button",className:"btn primary small",textContent:"Restore my edits"});
+  const box=el("div",{className:"restore"},el("span",{textContent:why==="signin"?"Your last edits weren’t saved because your staff sign-in had ended. Any file you added will need to be added again.":"Your last calendar edits weren’t saved because someone else saved first."}));
+  const r=el("button",{type:"button",className:"btn primary small",textContent:"Restore My Edits"});
   const x=el("button",{type:"button",className:"btn ghost small",textContent:"Dismiss"});
   r.onclick=()=>{state=normalize(parsed);dirty=true;editing=true;box.remove();renderAll()};x.onclick=()=>box.remove();
   box.append(r,x);$("restoreSlot").append(box);

@@ -2086,7 +2086,7 @@ textarea{min-height:84px;resize:vertical}
       <p class="err full" id="gh-err" hidden></p>
       <div class="dialog-actions full">
         <button class="btn ghost" type="button" id="gh-cancel">Cancel</button>
-        <button class="btn primary" type="submit" id="gh-go">Sign in</button>
+        <button class="btn primary" type="submit" id="gh-go">Sign In</button>
       </div>
     </form>
   </div>
@@ -4025,6 +4025,10 @@ $("saveBtn").onclick=async()=>{
       toast("Someone else saved a moment ago. Reloading their version; you can restore your changes after.");
       setTimeout(()=>location.reload(),1800);return;
     }
+    if((e.status===401||e.status===403)&&GH.mode==="cf"){
+      try{sessionStorage.setItem(PENDING,JSON.stringify(state));sessionStorage.setItem(PENDING+"-why","signin")}catch(x){}
+      dirty=false;toast("Your staff sign-in has ended. Taking you to sign in again…");setTimeout(()=>GH.signIn(),1800);return;
+    }
     if(e.status===401||e.status===403){toast("Your staff sign-in key has expired or can’t edit. Sign in again.");}
     else toast("Couldn’t save just now. Check your connection and try again.");
     $("saveBtn").disabled=false;$("saveMsg").textContent="You have unsaved changes";
@@ -4032,10 +4036,11 @@ $("saveBtn").onclick=async()=>{
 };
 (function(){let p=null;try{p=sessionStorage.getItem(PENDING)}catch(e){}
   if(!p)return;try{sessionStorage.removeItem(PENDING)}catch(e){}
+  let why=null;try{why=sessionStorage.getItem(PENDING+"-why");sessionStorage.removeItem(PENDING+"-why")}catch(e){}
   if(p===JSON.stringify(SAVED))return;
   let parsed;try{parsed=JSON.parse(p)}catch(e){return}
-  const box=el("div",{className:"restore"},el("span",{textContent:"Your last calendar edits weren’t saved because someone else saved first."}));
-  const r=el("button",{type:"button",className:"btn primary small",textContent:"Restore my edits"});
+  const box=el("div",{className:"restore"},el("span",{textContent:why==="signin"?"Your last edits weren’t saved because your staff sign-in had ended. Any file you added will need to be added again.":"Your last calendar edits weren’t saved because someone else saved first."}));
+  const r=el("button",{type:"button",className:"btn primary small",textContent:"Restore My Edits"});
   const x=el("button",{type:"button",className:"btn ghost small",textContent:"Dismiss"});
   r.onclick=()=>{state=normalize(parsed);dirty=true;editing=true;box.remove();renderAll()};x.onclick=()=>box.remove();
   box.append(r,x);$("restoreSlot").append(box);
@@ -4043,11 +4048,12 @@ $("saveBtn").onclick=async()=>{
 
 renderAll();show();
 
-/* staff sign-in (GitHub key) */
+/* staff sign-in: Cloudflare Access email sign-in on the Worker and church domain; GitHub key on github.io */
 if(GH.ok){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add,.ls-edit").forEach(b=>b.hidden=false);canEditFlag=true;assetsApi=GH.assets;renderNotice();renderPhotos();renderAll();}
 $("staffLink").textContent=GH.ok?"Staff Sign Out":"Staff Sign In";
 $("staffLink").onclick=e=>{e.preventDefault();
-  if(GH.ok){if(dirty&&!confirm("You have unsaved changes. Sign Out anyway?"))return;GH.forget();location.reload();return}
+  if(GH.ok){if(dirty&&!confirm("You have unsaved changes. Sign Out anyway?"))return;if(GH.mode==="cf"){dirty=false;GH.signOut();return}GH.forget();location.reload();return}
+  if(GH.mode==="cf"){GH.signIn();return}
   $("gh-key").value="";$("gh-err").hidden=true;$("overlay10").hidden=false;setTimeout(()=>$("gh-key").focus(),30)};
 $("gh-cancel").onclick=closeDlg;
 $("ghForm").addEventListener("submit",async ev=>{ev.preventDefault();
@@ -4055,7 +4061,7 @@ $("ghForm").addEventListener("submit",async ev=>{ev.preventDefault();
   if(!k)return err("Paste your staff sign-in key.");
   $("gh-go").disabled=true;$("gh-go").textContent="Checking…";
   const r=await GH.check(k);
-  $("gh-go").disabled=false;$("gh-go").textContent="Sign in";
+  $("gh-go").disabled=false;$("gh-go").textContent="Sign In";
   if(r!=="ok")return err(r==="readonly"?"That key can view but not edit the site. Create a key with “Contents: Read and write.”":r==="net"?"Couldn’t reach GitHub. Check your connection and try again.":"That key didn’t work. Check that you copied all of it, and that it hasn’t expired.");
   GH.remember(k);location.reload();
 });
@@ -4110,6 +4116,50 @@ GH.commit=async body=>{
   GH.head=c.sha;GH.tree=t.sha;files.forEach(p=>delete GH.pending[p]);
   return files.length;
 };
+/* Cloudflare mode: staff sign in with their email (Cloudflare Access); the Worker saves to GitHub */
+const CF=location.protocol==="https:"&&!/(^|\.)github\.io$|^localhost$|^127\.|\.test$/.test(location.hostname);
+GH.mode=CF?"cf":"gh";
+if(CF){
+  const FLAG="rhbc-staff",flag={get(){try{return localStorage.getItem(FLAG)==="1"}catch(e){return false}},set(){try{localStorage.setItem(FLAG,"1")}catch(e){}},del(){try{localStorage.removeItem(FLAG)}catch(e){}}};
+  GH.flag=flag;GH.files={};
+  const R2=p=>/^(bulletins|newsletters|photos)\//.test(p);
+  const cf=async(path,opt={})=>{
+    const r=await fetch(path,{...opt,cache:"no-store",credentials:"same-origin",redirect:"manual",headers:{"X-RHBC-Staff":"1",...(opt.headers||{})}});
+    if(r.type==="opaqueredirect"||!r.ok){const e=new Error("staff "+(r.status||"signed out"));e.status=r.type==="opaqueredirect"?401:r.status;throw e}
+    return r.json()};
+  GH.signIn=()=>{location.href="/sign-in?to="+encodeURIComponent(location.hash||"")};
+  GH.signOut=async()=>{flag.del();
+    try{await fetch("/api/sign-out",{credentials:"same-origin",redirect:"manual"})}catch(e){}
+    try{await fetch("/cdn-cgi/access/logout",{mode:"no-cors",credentials:"include"})}catch(e){}
+    location.reload()};
+  const cfExists=async path=>{if(GH.pending[path])return true;return(await cf("/api/staff/exists?path="+encodeURIComponent(path))).exists};
+  GH.assets={async upload(file,opt){
+    const folder=(opt&&opt.folder)||"files",d=new Date(),day=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const fixed=opt&&opt.name;let name=fixed?(opt.raw?opt.name:slug(opt.name)):slug(file.name);
+    for(let k=0;k<8;k++){
+      const path=fixed?folder+"/"+(k?name.replace(/(\.[a-z0-9]+)?$/,(opt.raw?" ("+(k+1)+")":"-"+(k+1))+"$1"):name):folder+"/"+day+"-"+(k?k+"-":"")+name;
+      if(await cfExists(path))continue;
+      GH.pending[path]=true;GH.files[path]=file;GH.local[path]=URL.createObjectURL(file);
+      return{id:path,url:GH.local[path]};
+    }
+    throw new Error("name");
+  }};
+  /* one save: PDFs and photos go straight to R2; site.json (and other files) are committed to GitHub by the Worker */
+  GH.commit=async body=>{
+    const files=Object.keys(GH.pending).filter(p=>body.indexOf(JSON.stringify(p))>=0),list=[];
+    for(const p of files){
+      const f=GH.files[p];
+      if(R2(p)&&!GH.sent[p]){await cf("/api/staff/upload?path="+encodeURIComponent(p),{method:"PUT",body:f,headers:{"Content-Type":f.type||"application/octet-stream"}});GH.sent[p]=true}
+      if(R2(p)&&!GH.copy)continue;
+      if(!GH.blobs[p])GH.blobs[p]=(await cf("/api/staff/blob",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:await fileB64(f),encoding:"base64"})})).sha;
+      list.push({path:p,sha:GH.blobs[p]});
+    }
+    const r=await cf("/api/staff/save",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({base:GH.head,data:body,files:list,uploaded:files.filter(R2)})});
+    GH.head=r.head;files.forEach(p=>{delete GH.pending[p];delete GH.files[p];delete GH.blobs[p];delete GH.sent[p]});
+    return files.length;
+  };
+  GH.sent={};GH.blobs={};
+}
 window.__RHBC_GH=GH;
 const LOG=window.__RHBC_LOG=window.__RHBC_LOG||[],RELOAD="rhbc-reloaded";
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
@@ -4135,6 +4185,20 @@ const load=async()=>{
     catch(e){LOG.push("Data download "+(i?"second":"first")+" try failed: "+e.message)}}
   return null};
 (async()=>{
+  if(CF){
+    const st=new URLSearchParams(location.search).get("staff");
+    if(st){try{history.replaceState(null,"",location.pathname+location.hash)}catch(e){}
+      if(st==="signed-in")GH.flag.set();
+      else GH.notice=st==="not-set-up"?"Staff sign-in isn’t set up on this website yet.":"Sign-in didn’t finish. Please try again, or ask the site administrator."}
+    if(st==="signed-in"||GH.flag.get()){
+      try{
+        const r=await fetch("/api/me",{cache:"no-store",credentials:"same-origin"});const m=await r.json();
+        if(m.signedIn){GH.ok=true;GH.head=m.head;GH.who=m.name;GH.copy=m.copyToGitHub;if(st==="signed-in")GH.notice="Signed in as "+m.name+".";return start(JSON.parse(m.data))}
+        GH.flag.del();GH.notice=m.setup===false?"Staff sign-in isn’t set up on this website yet.":"Your staff sign-in has ended. Sign in again to edit.";
+      }catch(e){GH.notice="Couldn’t reach the staff sign-in service, so you’re seeing the public view."}
+    }
+    return start(await load());
+  }
   if(token){
     try{
       const [info,ref]=await Promise.all([api(""),api("/git/ref/heads/"+BRANCH)]);

@@ -32,9 +32,20 @@ python3 tabc.py      # builds must be in ../out first
 
 Test pages for Sam to review are published as an unlinked file (for example `print-test.html` with a gold "TEST SITE" bar), then removed when approved.
 
+## Staff sign-in
+
+The same `index.html` works two ways:
+
+- **On the Cloudflare Worker (and the church domain after launch):** staff press **Staff Sign In**, which opens `/sign-in`. Cloudflare Access asks for their email and sends a code; only emails on the Access policy get in. The Worker (`_worker/index.js`) checks the Access sign-in token on every staff request and saves with the church's GitHub key (Worker secret `GITHUB_TOKEN`), so staff never see a key. Each save is one commit to `data/site.json`, with "saved by" and the staff member's name (from their email on the Our Staff page, or the `STAFF_NAMES` variable). New bulletins, newsletters and photos go straight to R2; while `COPY_UPLOADS_TO_GITHUB` is `"yes"` in `wrangler.jsonc`, they are also committed to GitHub so GitHub Pages keeps working. Set it to `"no"` when GitHub Pages is turned off.
+- **On GitHub Pages (`github.io`) and in the local tests:** the old sign-in key dialog, unchanged.
+
+Worker settings (Cloudflare dashboard → Workers & Pages → `rhbc-website` → Settings → Variables and Secrets): `ACCESS_TEAM` (team domain, for example `rhbc.cloudflareaccess.com`), `ACCESS_AUD` (the Access application's Audience tag), `GITHUB_TOKEN` (secret), optional `STAFF_NAMES` (`{"email": "Name"}`). `keep_vars` in `wrangler.jsonc` keeps them across deploys. The Access application covers only `/sign-in` and `/api/staff/*`, never the whole site.
+
+Staff endpoints: `/sign-in`, `/api/me`, `/api/sign-out`, `/api/staff/exists`, `/api/staff/upload` (R2), `/api/staff/blob`, `/api/staff/save`. Changes require the site's own Origin and the `X-RHBC-Staff` header.
+
 ## Security
 
-Never put a staff sign-in key, the Vimeo token or any other key in these files. Keys live only in each person's browser or in the repository's GitHub **Secrets**.
+Never put a staff sign-in key, the Vimeo token, a Cloudflare key or any other key in these files. Keys live only in each person's browser, the repository's GitHub **Secrets**, or the Worker's **Variables and Secrets** in Cloudflare.
 
 ## When something breaks (self-correcting start-up and the Website Check)
 

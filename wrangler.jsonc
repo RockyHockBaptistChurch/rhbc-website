@@ -1,6 +1,7 @@
 // Cloudflare Worker settings for the RHBC website.
 // The site's pages and data are served as static files from this repository;
-// bulletin and newsletter PDFs are served from the R2 bucket rhbc-files.
+// bulletin and newsletter PDFs and gallery photos are served from the R2 bucket rhbc-files.
+// Staff sign-in and saving run in _worker/index.js (see the settings list at the top of that file).
 // Cloudflare redeploys automatically on every push to main.
 {
   "name": "rhbc-website",
@@ -8,10 +9,19 @@
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": ".",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/sign-in"]
   },
   "r2_buckets": [
     { "binding": "FILES", "bucket_name": "rhbc-files" }
   ],
+  // ACCESS_TEAM, ACCESS_AUD and STAFF_NAMES are set in the Cloudflare dashboard
+  // (Settings > Variables and Secrets); keep_vars stops each deploy from removing them.
+  // GITHUB_TOKEN is a secret there too, never in this file.
+  "keep_vars": true,
+  "vars": {
+    // "yes" until GitHub Pages is turned off, so new PDFs and photos also reach GitHub Pages.
+    "COPY_UPLOADS_TO_GITHUB": "yes"
+  },
   "observability": { "enabled": true }
 }
