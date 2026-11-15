@@ -1,0 +1,17 @@
+// Cloudflare Worker settings for the RHBC website.
+// The site's pages and data are served as static files from this repository;
+// bulletin and newsletter PDFs are served from the R2 bucket rhbc-files.
+// Cloudflare redeploys automatically on every push to main.
+{
+  "name": "rhbc-website",
+  "main": "_worker/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS"
+  },
+  "r2_buckets": [
+    { "binding": "FILES", "bucket_name": "rhbc-files" }
+  ],
+  "observability": { "enabled": true }
+}
