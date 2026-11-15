@@ -8,7 +8,7 @@ async def main():
     b=await p.chromium.launch()
     async def handler(route):
       req=route.request;u=req.url
-      if u.startswith('https://api.github.com/repos/hctynch/rhbc-website'):
+      if u.startswith('https://api.github.com/repos/RockyHockBaptistChurch/rhbc-website'):
         auth=req.headers.get('authorization','')
         if auth!='Bearer GOODKEY': return await route.fulfill(status=401,body='{}',content_type='application/json')
         path=u.split('rhbc-website',1)[1]

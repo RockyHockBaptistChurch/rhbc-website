@@ -13,7 +13,7 @@ This folder holds the files used to build the website. Visitors never need it, a
 
 ```bash
 cd _source
-python3 build_gh.py hctynch rhbc-website out ../data/site.json --noindex
+python3 build_gh.py RockyHockBaptistChurch rhbc-website out ../data/site.json --noindex
 cp out/index.html ../index.html      # only index.html; never copy out/data
 cd .. && git add index.html _source && git commit -m "…" && git push
 ```

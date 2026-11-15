@@ -11,7 +11,7 @@ def opt(name, default):
     return args[args.index(name) + 1] if name in args else default
 ROOT = os.path.abspath(opt('--root', os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 OUT, BODY = opt('--out', 'result.json'), opt('--body', 'body.md')
-SITE = 'https://hctynch.github.io/rhbc-website/'
+SITE = 'https://rockyhockbaptistchurch.github.io/rhbc-website/'
 ADMIN = os.environ.get('ADMIN', 'hctynch')
 
 class Quiet(http.server.SimpleHTTPRequestHandler):

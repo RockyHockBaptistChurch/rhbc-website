@@ -19,4 +19,4 @@ The public website for Rocky Hock Baptist Church, 113 Rocky Hock Church Road, Ed
 
 Staff edit the site from the website itself: scroll to the bottom of any page, click **Staff sign in**, paste a sign-in key, and use the edit buttons. Pressing **Save changes** updates `data/site.json`; uploads go into the folders above. The public site refreshes about a minute after each save.
 
-A sign-in key is a GitHub *fine-grained personal access token* limited to the `hctynch/rhbc-website` repository with **Contents: Read and write** permission.
+A sign-in key is a GitHub *fine-grained personal access token* limited to the `RockyHockBaptistChurch/rhbc-website` repository with **Contents: Read and write** permission.
