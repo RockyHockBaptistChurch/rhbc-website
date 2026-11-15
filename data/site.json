@@ -88,6 +88,88 @@
    ]
   },
   {
+   "id": "emwhc2zq06uv8",
+   "title": "Hand Bell Choir Practice",
+   "date": "2026-11-15",
+   "cats": [
+    "music"
+   ],
+   "auds": [
+    "all"
+   ],
+   "cat": "music",
+   "start": "16:30",
+   "end": "",
+   "loc": "",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0tiww",
+   "title": "Bible Drill",
+   "date": "2026-11-15",
+   "cats": [
+    "bible"
+   ],
+   "auds": [
+    "kids",
+    "students"
+   ],
+   "cat": "bible",
+   "start": "17:00",
+   "end": "",
+   "loc": "",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0w6fu",
+   "title": "Anchor Deadline",
+   "date": "2026-11-16",
+   "cats": [],
+   "auds": [
+    "all"
+   ],
+   "cat": "",
+   "start": "",
+   "end": "",
+   "loc": "",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0pc9z",
+   "title": "NC Baptists Annual Meeting",
+   "date": "2026-11-16",
+   "cats": [
+    "meetings"
+   ],
+   "auds": [
+    "adults"
+   ],
+   "cat": "meetings",
+   "start": "",
+   "end": "",
+   "loc": "",
+   "desc": "Greensboro, NC",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0edtc",
+   "title": "NC Baptists Annual Meeting",
+   "date": "2026-11-17",
+   "cats": [
+    "meetings"
+   ],
+   "auds": [],
+   "cat": "meetings",
+   "start": "",
+   "end": "",
+   "loc": "",
+   "desc": "Greensboro, NC",
+   "url": ""
+  },
+  {
    "id": "e1a1a4b950220qvz",
    "title": "Chase Bateman Memorial Blood Drive",
    "date": "2026-11-17",
@@ -103,6 +185,62 @@
    "auds": [
     "all"
    ]
+  },
+  {
+   "id": "emwhc2zq0vwaq",
+   "title": "Operation Christmas Child Shoebox Packing Party",
+   "date": "2026-11-18",
+   "cats": [
+    "missions"
+   ],
+   "auds": [
+    "all"
+   ],
+   "cat": "missions",
+   "start": "19:00",
+   "end": "",
+   "loc": "Gym",
+   "desc": "in lieu of regular Wednesday night activities and Worship",
+   "url": "",
+   "cancels": {
+    "mode": "some",
+    "ids": [
+     "vertical",
+     "garas",
+     "seeds",
+     "mf"
+    ]
+   }
+  },
+  {
+   "id": "emwhc2zq05hp2",
+   "title": "Pickleball",
+   "date": "2026-11-19",
+   "cats": [
+    "fellowship"
+   ],
+   "auds": [],
+   "cat": "fellowship",
+   "start": "09:00",
+   "end": "11:00",
+   "loc": "Gym",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq02xxq",
+   "title": "4H Meeting",
+   "date": "2026-11-19",
+   "cats": [
+    "meetings"
+   ],
+   "auds": [],
+   "cat": "meetings",
+   "start": "15:30",
+   "end": "17:00",
+   "loc": "Multi-Purpose Building",
+   "desc": "",
+   "url": ""
   },
   {
    "id": "e7pxk7bc7ghhdh",
@@ -121,6 +259,66 @@
     "all"
    ],
    "attach": "worship"
+  },
+  {
+   "id": "emwhc2zq01or6",
+   "title": "Creative Ministries Team",
+   "date": "2026-11-22",
+   "cats": [
+    "meetings"
+   ],
+   "auds": [],
+   "cat": "meetings",
+   "start": "12:00",
+   "end": "",
+   "loc": "Special Function Room",
+   "desc": "Following Worship",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0gneu",
+   "title": "Hand Bell Choir Practice",
+   "date": "2026-11-22",
+   "cats": [
+    "music"
+   ],
+   "auds": [],
+   "cat": "music",
+   "start": "16:30",
+   "end": "",
+   "loc": "",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq09gsm",
+   "title": "Bible Drill",
+   "date": "2026-11-22",
+   "cats": [
+    "bible"
+   ],
+   "auds": [],
+   "cat": "bible",
+   "start": "17:00",
+   "end": "",
+   "loc": "",
+   "desc": "",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq0eiml",
+   "title": "Pickleball",
+   "date": "2026-11-23",
+   "cats": [
+    "fellowship"
+   ],
+   "auds": [],
+   "cat": "fellowship",
+   "start": "09:00",
+   "end": "11:00",
+   "loc": "Gym",
+   "desc": "",
+   "url": ""
   },
   {
    "id": "emw41ok9naog5",
@@ -190,6 +388,41 @@
    "auds": [
     "seniors"
    ]
+  },
+  {
+   "id": "emwhc2zq0wl9e",
+   "title": "Lottie Moon Post Office",
+   "date": "2026-12-06",
+   "cats": [
+    "missions"
+   ],
+   "auds": [
+    "kids",
+    "all"
+   ],
+   "cat": "missions",
+   "start": "",
+   "end": "",
+   "loc": "",
+   "desc": "Lottie Moon Post Office – December 6 – 20 Let the GA’s deliver your Christmas cards to the Church Family for 40 cents per card. Please put the family or individual’s Sunday School Class name on the card if you know it. Mailbox is in the Connecting Corridor.",
+   "url": ""
+  },
+  {
+   "id": "emwhc2zq01p0i",
+   "title": "Children's Ministry Christmas Lights Outing & Holy Night Express",
+   "date": "2026-12-21",
+   "cats": [
+    "worship"
+   ],
+   "auds": [
+    "kids"
+   ],
+   "cat": "worship",
+   "start": "16:30",
+   "end": "21:30",
+   "loc": "",
+   "desc": "Children's Ministry Christmas Lights Outing & Holy Night Express - Monday, December 21, 2026 Come experience the story of Jesus' birth and enjoy the beauty of Christmas lights as we celebrate the true meaning of Christmas together! • Destination: Elizabethan Gardens Christmas Lights & Holy Night Express, Manteo, NC • Departure: 4:30 PM from Rocky Hock Baptist Church • Return: Approximately 9:30 PM • Meal: Provided • Transportation: Charter bus • Chaperones: Children younger than the K–5 group must be accompanied by an adult. • Parents are welcome to attend! Interested in joining us? Please contact Cache' Hapner if you haven't already been contacted. We are gathering an accurate headcount to ensure sufficient seating on the charter bus.",
+   "url": ""
   },
   {
    "id": "emw1isx64276g",
@@ -301,6 +534,17 @@
   }
  ],
  "bulletins": [
+  {
+   "d": "2026-11-15",
+   "t": "",
+   "a": "bulletins/2026/20261115 RHBC Bulletin.pdf",
+   "s": {
+    "title": "",
+    "scr": "",
+    "by": "Pastor Trey Rogers",
+    "series": ""
+   }
+  },
   {
    "d": "2026-11-08",
    "t": "",
@@ -3524,5 +3768,10 @@
   }
  ],
  "schedChanges": [],
- "overrides": []
+ "overrides": [],
+ "bulletinSkip": [
+  "RHBC Apparel Orders (last day)",
+  "Basketball Meeting",
+  "Creative Ministries Team begins decorating Church Campus for Christmas"
+ ]
 }
