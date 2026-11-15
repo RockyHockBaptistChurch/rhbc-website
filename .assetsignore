@@ -6,5 +6,6 @@ _worker
 node_modules
 bulletins
 newsletters
+photos
 wrangler.jsonc
 README.md

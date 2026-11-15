@@ -1,19 +1,20 @@
 // RHBC website Worker.
-// Bulletin and newsletter PDFs come from the R2 bucket (binding FILES);
+// Bulletin and newsletter PDFs and gallery photos come from the R2 bucket (binding FILES);
 // everything else is a static file from the repository (binding ASSETS).
-const PDF_FOLDERS = ["/bulletins/", "/newsletters/"];
+const R2_FOLDERS = ["/bulletins/", "/newsletters/", "/photos/"];
+const TYPES = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif", heic: "image/heic" };
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (PDF_FOLDERS.some((p) => url.pathname.startsWith(p))) {
-      return servePdf(request, env, url);
+    if (R2_FOLDERS.some((p) => url.pathname.startsWith(p))) {
+      return serveFile(request, env, url);
     }
     return env.ASSETS.fetch(request);
   },
 };
 
-async function servePdf(request, env, url) {
+async function serveFile(request, env, url) {
   if (request.method !== "GET" && request.method !== "HEAD") {
     return new Response("Method Not Allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
   }
@@ -29,7 +30,8 @@ async function servePdf(request, env, url) {
   const headers = new Headers();
   obj.writeHttpMetadata(headers);
   headers.set("etag", obj.httpEtag);
-  headers.set("content-type", "application/pdf");
+  const ext = key.split(".").pop().toLowerCase();
+  headers.set("content-type", TYPES[ext] || headers.get("content-type") || "application/octet-stream");
   headers.set("accept-ranges", "bytes");
   headers.set("cache-control", "public, max-age=86400");
 

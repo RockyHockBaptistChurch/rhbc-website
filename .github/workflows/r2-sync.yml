@@ -1,9 +1,9 @@
-name: Copy PDFs to Cloudflare R2
+name: Copy PDFs and Photos to Cloudflare R2
 
-# Copies every bulletin and newsletter PDF into the church's Cloudflare R2 bucket
+# Copies every bulletin and newsletter PDF and every gallery photo into the church's Cloudflare R2 bucket
 # (rhbc-files), keeping the same folder paths, then checks that the counts match.
-# Runs when this file changes, whenever a PDF is added or changed, and by hand
-# (Actions → Copy PDFs to Cloudflare R2 → Run workflow). It only adds and updates;
+# Runs when this file changes, whenever a PDF or photo is added or changed, and by hand
+# (Actions → Copy PDFs and Photos to Cloudflare R2 → Run workflow). It only adds and updates;
 # it never deletes anything from R2.
 # Uses the R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY and R2_ACCOUNT_ID secrets.
 on:
@@ -12,6 +12,7 @@ on:
     paths:
       - "bulletins/**"
       - "newsletters/**"
+      - "photos/**"
       - ".github/workflows/r2-sync.yml"
   workflow_dispatch:
 
@@ -40,25 +41,31 @@ jobs:
           sparse-checkout: |
             /bulletins/
             /newsletters/
+            /photos/
           sparse-checkout-cone-mode: false
       - name: Check the secrets are set
         run: |
           for v in AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do [ -n "${!v}" ] || { echo "::error::Missing R2 secret ($v)"; exit 1; }; done
           [ "$ENDPOINT" != "https://.r2.cloudflarestorage.com" ] || { echo "::error::Missing R2_ACCOUNT_ID secret"; exit 1; }
-      - name: Copy PDFs to R2
+      - name: Copy PDFs and photos to R2
         run: |
           for d in bulletins newsletters; do
             aws s3 sync "$d" "s3://$BUCKET/$d" --endpoint-url "$ENDPOINT" \
               --exclude "*" --include "*.pdf" --content-type application/pdf --only-show-errors
           done
-      - name: Check every PDF is in R2
+          # Photos: each file gets its own type (jpg, png, webp, gif, heic) from its name
+          [ -d photos ] && aws s3 sync photos "s3://$BUCKET/photos" --endpoint-url "$ENDPOINT" \
+              --exclude "*.md" --only-show-errors || true
+      - name: Check every file is in R2
         run: |
           fail=0
-          for d in bulletins newsletters; do
-            here=$(find "$d" -type f -name '*.pdf' | wc -l)
-            there=$(aws s3 ls "s3://$BUCKET/$d/" --recursive --endpoint-url "$ENDPOINT" | grep -c '\.pdf$' || true)
+          for d in bulletins newsletters photos; do
+            [ -d "$d" ] || continue
+            if [ "$d" = photos ]; then pat='\.(jpe?g|png|webp|gif|heic)$'; else pat='\.pdf$'; fi
+            here=$(find "$d" -type f | grep -Eic "$pat" || true)
+            there=$(aws s3 ls "s3://$BUCKET/$d/" --recursive --endpoint-url "$ENDPOINT" | grep -Eic "$pat" || true)
             echo "$d: $here in GitHub, $there in R2"
             echo "- **$d:** $here in GitHub, $there in R2" >> "$GITHUB_STEP_SUMMARY"
             [ "$there" -ge "$here" ] || fail=1
           done
-          [ $fail -eq 0 ] || { echo "::error::Some PDFs are missing from R2"; exit 1; }
+          [ $fail -eq 0 ] || { echo "::error::Some files are missing from R2"; exit 1; }
