@@ -2833,7 +2833,7 @@ function bsLines(pg,x0,x1){
   return L.map(l=>{l.its.sort((a,b)=>a.x-b.x);let s="",end=null;
     for(const t of l.its){if(end!==null&&t.x-end>1.2&&!/\s$/.test(s)&&!/^\s/.test(t.s))s+=" ";s+=t.s;end=t.x+t.w}
     return {y:l.y,x:l.its[0].x,h:Math.max(...l.its.map(t=>t.h)),s:s.replace(/\s+/g," ").replace(/\s+([,.;:)])/g,"$1").trim()}})
-    .filter(l=>l.h>=9.5||!/^(st|nd|rd|th)$/i.test(l.s)); /* drop raised "th" in "15th" */
+    .filter(l=>!/^((st|nd|rd|th)\s*)+$/i.test(l.s)); /* drop raised "th" in "15th" */
 }
 function bsYmd(bdate,mon,day){const by=+bdate.slice(0,4),bm=+bdate.slice(5,7);let y=by;if(mon<bm-6)y++;else if(mon>bm+6)y--;
   return y+"-"+String(mon).padStart(2,"0")+"-"+String(day).padStart(2,"0")}
@@ -2850,7 +2850,7 @@ function bsTitleCase(s){const small=/^(a|an|and|as|at|but|by|for|in|of|on|or|the
   return s.toLowerCase().split(/(\s+)/).map((w,i)=>/^\s+$/.test(w)||(i>0&&small.test(w))?w:w.replace(/^([“"(']*)(\w)/,(x,p,c)=>p+c.toUpperCase())).join("")}
 function bsLoc(x){x=(x||"").replace(/[.;,]+$/,"").trim();
   return x.replace(/^(?:in|at)\s+(?:the\s+)?/i,"").replace(/\bS\.?\s?F\.?\s+Room\b/i,"Special Function Room").replace(/\bM\.?\s?P\.?\s+(?:Bldg\.?|Building)/i,"Multi-Purpose Building").replace(/^MPB$/i,"Multi-Purpose Building")
-    .replace(/\bSr\.?\s+Adult\b/i,"Senior Adult").replace(/\bBldg\.?/i,"Building").replace(/\bSS\s+R(?:oo)?m\b\.?/,"Sunday School Room").replace(/^front Sanctuary$/i,"Front of the Sanctuary").replace(/^(\w)/,c=>c.toUpperCase())}
+    .replace(/\bSr\.?\s+Adult\b/i,"Senior Adult").replace(/\bBldg\.?/i,"Building").replace(/\bRm\.?$/i,"Room").replace(/\bSS\s+R(?:oo)?m\b\.?/,"Sunday School Room").replace(/^front Sanctuary$/i,"Front of the Sanctuary").replace(/^(\w)/,c=>c.toUpperCase())}
 function bsAud(s){const a=[];if(/\b(children|kids?|preschool)\b|mission friends|ga.?s|ra.?s|children.s church/i.test(s))a.push("kids");if(/\b(youth|students?|vsm|teens?)\b/i.test(s))a.push("students");
   if(/\bsenior adults?\b|young at heart/i.test(s))a.push("seniors");else if(/\b(adults?|men.?s|women.?s|ladies|wmu)\b/i.test(s))a.push("adults");if(/all ages|everyone|family/i.test(s))a.push("all");return [...new Set(a)]}
 function bsCat(s){return /\b(worship|service|revival|singing)\b/i.test(s)?/choir|singing/i.test(s)?"music":"worship":/bible|drill|sunday school/i.test(s)?"bible":/\bchoirs?\b|\bbells?\b|\bmusic\b|cantata|concert/i.test(s)?"music":
@@ -2866,15 +2866,16 @@ function bsEntry(date,line){
     part=part.trim();if(!part)continue;
     const segs=part.split(/(?<!\d)\s+[–—-]\s+(?!\d)|(?<=\S)\s*–\s*$/).map(x=>x.trim()).filter(Boolean);
     let title=segs.shift()||"",loc="";const extra=[];
-    for(const sg of segs){if(!loc&&BS_ROOM.test(sg)&&sg.split(" ").length<=7)loc=bsLoc(sg.replace(/\s*\([^)]*\)/,""));else extra.push(sg)}
+    for(const sg of segs){const bare=sg.replace(/\s*\([^)]*\)/g,"").trim(),pn=(sg.match(/\(([^)]*)\)/)||[])[1];
+      if(!loc&&BS_ROOM.test(bare)&&bare.split(" ").length<=7){loc=bsLoc(bare);if(pn)extra.push(pn)}else extra.push(sg)}
     const par=(title.match(/\(([^)]*)\)/)||[])[1]||"";title=title.replace(/\s*\([^)]*\)\s*/g," ").trim();
-    title=title.replace(/\bMtg\.?/i,"Meeting");
-    if(/^(no|cancel+ed)\b/i.test(title)||new RegExp("^(?:"+BS_DAYS+")$","i").test(title))continue; /* "NO Bible Drill" notices */
+    title=title.replace(/\bMtg\.?/i,"Meeting").replace(/\bw\/\s*/i,"with ");
+    if(/^(no|cancel+ed)\b|\bclosed\b|\bcancel+ed\b/i.test(title)||new RegExp("^(?:"+BS_DAYS+")$","i").test(title))continue; /* "NO Bible Drill" notices */
     const atm=!loc&&title.match(/^(.{6,}?)\s+(?:meets\s+)?at\s+((?:the\s+)?home of\s+.+|[A-Z][^,]*)$/);
     if(atm){title=atm[1];loc=bsLoc(atm[2].replace(/^the\s+/i,""))}
     const inl=title.match(/^(.+?)\s+(?:in|at)\s+(?:the\s+)?((?:[A-Z][\w’'.]*\s?){1,5})$/);
     if(!loc&&inl&&BS_ROOM.test(inl[2])){title=inl[1];loc=bsLoc(inl[2])}
-    const pl=part.match(/\(([^)]*)\)\s*$/);if(pl&&!par&&!BS_ROOM.test(pl[1]))extra.push(pl[1]);
+    const pl=part.match(/\(([^)]*)\)\s*$/);if(pl&&!par&&!BS_ROOM.test(pl[1])&&!extra.some(x=>x.includes(pl[1])))extra.push(pl[1]);
     title=title.replace(/[“”"]/g,"").replace(/\s+/g," ").trim();
     const wm=title.match(/^(.+?)\s+with\s+(.+)$/i);if(wm&&!/^\d/.test(wm[2])){title=wm[1];extra.unshift("With "+wm[2])}
     if(title===title.toUpperCase()&&/[A-Z]{3}/.test(title)&&!/^[A-Z]{2,4}$/.test(title))title=bsTitleCase(title);
@@ -2887,7 +2888,7 @@ function bsList(lines,bdate){
   const dayRe=new RegExp("^(?:"+BS_DAYS+"),?\\s+("+BS_MON+")\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*(?:[–—-]\\s*(.+))?$","i");
   const out=[],ents=[];let date="",cur=null;
   for(const l of lines){
-    const s=l.s;if(/this week at|^next week|^coming up|^upcoming/i.test(s)){cur=null;continue}
+    const s=l.s.replace(/^[*•·\-–\s]+(?=[A-Za-z])/,"");if(/this week at|^next week|^coming up|^upcoming/i.test(s)){cur=null;continue}
     const d=s.match(dayRe);
     if(d){date=bsYmd(bdate,BS_MONTHS.indexOf(d[1].toLowerCase())+1,+d[2]);cur=null;
       if(d[3]){const t=d[3].replace(/[“”"]/g,"").trim();out.push({date,start:"",end:"",title:t,loc:"",desc:"",auds:[],cats:[],src:"list",allDay:true,raw:s})}continue}
@@ -2919,6 +2920,8 @@ function bsAnn(paras,bdate){
       const tm=after.match(/^[^.]{0,45}?(?:@|\bat\b|\bfrom\b|,)\s*(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?(?:\s*[–—-]\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM))?)(?=[\s.,;]|$)/i)
         ||after.match(/^[^.]{0,4}\.\s[^.]{0,40}?\bat\s(\d{1,2}(?::\d{2})?\s*(?:AM|PM))/i);
       let start="",end="";if(tm){const t=bsTimes(tm[1].trim());if(t){start=t[0];end=t[1]}}
+      if(!start&&nth===0){const dp=tx.match(/\b(?:departure|depart|leave|leaving|time|begins|starts)\s*:?\s*(?:at\s*)?(\d{1,2}(?::\d{2})?\s*(?:AM|PM))/i);
+        if(dp){start=bsTimes(dp[1])[0];const rt=tx.match(/\b(?:return|returning|ends)\s*:?\s*(?:at\s*)?(?:approximately\s*|about\s*|around\s*)?(\d{1,2}(?::\d{2})?\s*(?:AM|PM))/i);if(rt)end=bsTimes(rt[1])[0]}}
       /* title: the words before the date in that sentence, or the heading */
       const sent=tx.slice(0,m.index).split(/(?<=[.!?])\s+/).pop()||"";
       let title=sent.replace(/[–—-]\s*$/,"").trim()
@@ -2929,7 +2932,7 @@ function bsAnn(paras,bdate){
       title=title.replace(/\s+(?:join us|will begin|will resume|begins|starts)\s*$/i,"").trim();
       const first=!nth++;
       if(p.head&&first)title=bsTitleCase(p.head.replace(/[:!.]+$/,""));
-      if(!title||title.split(" ").length>8||/\b(will|we|you|has|have|had|booked|held|available)\b/i.test(title)||/^[a-z]/.test(title)||/^(on|at|for|by|tonight|today|this)$/i.test(title))title=p.head?bsTitleCase(p.head.replace(/[:!.]+$/,"")):"";
+      if(!title||title.split(" ").length>12||/\b(will|we|you|has|have|had|booked|held|available)\b/i.test(title)||/^[a-z]/.test(title)||/^(on|at|for|by|tonight|today|this)$/i.test(title))title=p.head?bsTitleCase(p.head.replace(/[:!.]+$/,"")):"";
       if(!title){const tw=after.match(/there will be (?:a|an)\s+([^.,]{3,60})/i);if(tw)title=tw[1].replace(/\s+(at|in|for)\s.*$/,"").replace(/^\w/,c=>c.toUpperCase())}
       if(!title)continue;
       if(title===title.toUpperCase())title=bsTitleCase(title);
