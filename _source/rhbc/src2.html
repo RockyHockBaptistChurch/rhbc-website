@@ -837,6 +837,41 @@ textarea{min-height:84px;resize:vertical}
 .pr-ch label:has(input:checked){border-color:var(--brand-hi);background:var(--wash)}
 .pr-ch input{margin-top:3px;accent-color:var(--brand-hi)}
 .pr-btn{white-space:nowrap}
+/* bulletin event review */
+.dialog.bs-wide{width:min(760px,100%)}
+.bs-wait{color:var(--muted)}
+.bs-lead{margin:0}
+.bs-sec{display:grid;gap:8px}
+.bs-sec h3,.bs-fold summary{font:700 1rem var(--body);margin:4px 0 0;color:var(--ink)}
+.bs-sec>.meta,.bs-fold>.meta{margin:0}
+.bs-row{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px;background:var(--surface)}
+.bs-row.on{border-color:color-mix(in srgb,var(--brand-hi) 50%,var(--line));background:color-mix(in srgb,var(--brand-hi) 5%,var(--surface))}
+.bs-pick{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;cursor:pointer}
+.bs-pick input{width:18px;height:18px;margin-top:2px;accent-color:var(--brand-hi)}
+.bs-txt{display:grid;gap:2px;min-width:0}
+.bs-when{font:600 .8rem var(--body);color:var(--brand-hi);font-variant-numeric:tabular-nums}
+.bs-info{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;min-width:0}
+.bs-info b{font-weight:700;overflow-wrap:anywhere}
+.bs-loc{color:var(--muted);font-size:.88rem}
+.bs-tag{font:600 .72rem var(--body);padding:2px 7px;border-radius:999px;background:var(--wash);color:var(--muted);white-space:nowrap}
+.bs-maybe{margin:0 0 0 28px;font-size:.85rem;color:var(--ink);background:color-mix(in srgb,#D4A017 16%,var(--surface));border-radius:6px;padding:6px 9px}
+.bs-acts{display:flex;flex-wrap:wrap;gap:6px;margin-left:28px}
+.bs-edit{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 2px 28px;padding:10px;border-radius:8px;background:var(--wash)}
+.bs-edit[hidden]{display:none}
+.bs-edit .full{grid-column:1/-1}
+.bs-f{display:grid;gap:4px;font:600 .82rem var(--body);color:var(--muted);min-width:0}
+.bs-f[hidden]{display:none}
+.bs-f input[type=text],.bs-f input[type=date],.bs-f input[type=time],.bs-f select,.bs-f textarea{font:400 .95rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0;box-sizing:border-box}
+.bs-f input:disabled{opacity:.5}
+.bs-lab{display:flex;align-items:center;gap:8px;color:var(--ink);font-weight:600}
+.bs-lab input,.bs-auds input{accent-color:var(--brand-hi)}
+.bs-auds{display:flex;flex-wrap:wrap;gap:6px 14px;font-weight:500;color:var(--ink)}
+.bs-auds label{display:flex;align-items:center;gap:5px}
+.bs-fold{border-top:1px solid var(--line);padding-top:8px}
+.bs-fold summary{cursor:pointer}
+.bs-plain{margin:6px 0 0;font-size:.88rem;color:var(--ink)}
+@media (max-width:560px){.bs-edit{grid-template-columns:1fr;margin-left:0}.bs-acts,.bs-maybe{margin-left:0}}
+
 @media print{
   body.pr-on>*:not(#printView){display:none!important}
   body.pr-on #printView{position:static;background:none;overflow:visible}
@@ -2095,7 +2130,7 @@ textarea{min-height:84px;resize:vertical}
       </fieldset>
       <p class="err full" id="d-err" hidden></p>
       <div class="dialog-actions full">
-        <button class="btn danger" type="button" id="d-del">Remove</button>
+        <button class="btn danger" type="button" id="d-del">Remove</button><button class="btn ghost" type="button" id="d-scan" hidden>Find New Events</button>
         <button class="btn ghost" type="button" id="d-cancel">Cancel</button>
         <button class="btn primary" type="submit" id="d-apply">Add</button>
       </div>
@@ -2743,6 +2778,7 @@ function openDoc(kind,i){
   $("d-s-title").value=sm.title||"";$("d-s-scr").value=sm.scr||"";$("d-s-by").value=sm.by||"";$("d-s-series").value=sm.series||"";
   $("d-s-hint").textContent="Filled in from the PDF when you upload it. Check it, or type it in.";
   $("d-read").hidden=!(it&&(it.a||it.u));$("d-read").disabled=false;$("d-read").textContent="Read From PDF";
+  $("d-scan").hidden=!(isB&&it&&(it.a||it.u));$("d-scan").disabled=false;$("d-scan").textContent="Find New Events";
   $("overlay3").hidden=false;
 }
 document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>openDoc(b.dataset.add,-1));
@@ -2756,7 +2792,7 @@ $("dForm").addEventListener("submit",async ev=>{
   if(isB&&!/^\d{4}-\d{2}-\d{2}$/.test(d))return err("Pick the Sunday this bulletin is for.");
   if(!isB&&!/^\d{4}-\d{2}$/.test(d))return err("Pick the newsletter’s month.");
   const old=docIdx>=0?state[docKind][docIdx]:null;
-  const rec={d,t:$("d-title").value.trim()};
+  const rec={d,t:$("d-title").value.trim()};let scanSrc=null;
   if(srcVal()==="upload"){
     const file=$("d-file").files[0];
     if(file){
@@ -2767,7 +2803,7 @@ $("dForm").addEventListener("submit",async ev=>{
       try{const r=await assetsApi.upload(file,{type:"application/pdf"});rec.a=r.id}
       catch(e){const c=e&&e.code;docBusy=false;$("d-apply").disabled=false;$("d-apply").textContent=old?"Apply":"Add";
         return err(c==="too_large"?"That PDF is too large. The limit is 20 MB.":c==="unsupported_type"?"That file isn’t a PDF.":c==="quota_or_state"?"Storage for this site is full. Remove old uploads or paste a link instead.":c==="rate_limited"?"Too many uploads at once. Wait a moment and try again.":"The upload didn’t go through. Try again, or paste a link instead.")}
-      docBusy=false;$("d-apply").disabled=false;
+      docBusy=false;$("d-apply").disabled=false;scanSrc=file;
     }else if(old&&(old.a||old.u)){if(old.a)rec.a=old.a;else rec.u=old.u}
     else return err("Choose the PDF to upload.");
   }else{
@@ -2781,7 +2817,242 @@ $("dForm").addEventListener("submit",async ev=>{
   if(docIdx>=0)list.splice(docIdx,1);
   list.push(rec);list.sort((x,y)=>(y.d||"").localeCompare(x.d||""));
   dirty=true;editing=true;closeDlg();renderAll();toast((old?"Updated":"Added")+". Press “Save Changes” to publish it.");
+  if(isB&&scanSrc)openEventScan(scanSrc,d);
 });
+
+/* ===== find new events in an uploaded bulletin ===== */
+/* ===== Bulletin event scan: reads "This Week / Next Week" and the announcements ===== */
+var BS_MONTHS=["january","february","march","april","may","june","july","august","september","october","november","december"];
+var BS_DAYS="Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday";
+var BS_MON="January|February|March|April|May|June|July|August|September|October|November|December";
+var BS_ROOM=/\b(room|rm\.?|building|bldg\.?|suite|sanctuary|gym|gymnasium|vestibule|fellowship hall|kitchen|chapel|corridor|office|parsonage|nursery|choir loft|ballfield|field|pavilion|shelter|parking lot|fellowship room|front sanctuary)\b/i;
+function bsLines(pg,x0,x1){
+  const its=pg.items.filter(t=>t.s&&t.s.trim()&&t.x>=x0&&t.x<x1).sort((a,b)=>a.y-b.y||a.x-b.x),L=[];
+  for(const t of its){let l=null;for(const c of L)if(Math.abs(c.y-t.y)<2.5){l=c;break}if(!l){l={y:t.y,its:[]};L.push(l)}l.its.push(t)}
+  L.sort((a,b)=>a.y-b.y);
+  return L.map(l=>{l.its.sort((a,b)=>a.x-b.x);let s="",end=null;
+    for(const t of l.its){if(end!==null&&t.x-end>1.2&&!/\s$/.test(s)&&!/^\s/.test(t.s))s+=" ";s+=t.s;end=t.x+t.w}
+    return {y:l.y,x:l.its[0].x,h:Math.max(...l.its.map(t=>t.h)),s:s.replace(/\s+/g," ").replace(/\s+([,.;:)])/g,"$1").trim()}})
+    .filter(l=>l.h>=9.5||!/^(st|nd|rd|th)$/i.test(l.s)); /* drop raised "th" in "15th" */
+}
+function bsYmd(bdate,mon,day){const by=+bdate.slice(0,4),bm=+bdate.slice(5,7);let y=by;if(mon<bm-6)y++;else if(mon>bm+6)y--;
+  return y+"-"+String(mon).padStart(2,"0")+"-"+String(day).padStart(2,"0")}
+function bsHM(t,ap){const m=String(t).match(/^(\d{1,2})(?::(\d{2}))?$/);if(!m)return "";let h=+m[1];const mi=m[2]||"00";ap=(ap||"").toUpperCase();
+  if(ap==="PM"&&h<12)h+=12;if(ap==="AM"&&h===12)h=0;if(!ap&&h>=1&&h<=6)h+=12;return String(h).padStart(2,"0")+":"+mi}
+/* "9 AM – 11 AM", "5:30 – 8 PM", "1 – 6 PM", "6:45 PM", "Noon" -> [start,end] */
+function bsTimes(s){
+  s=s.replace(/\bnoon\b/i,"12 PM").replace(/\bmidnight\b/i,"12 AM").replace(/\s*\.\s*m\.?/gi,"M").replace(/\b([ap])\.?m\.?/gi,(x,a)=>a.toUpperCase()+"M");
+  const m=s.match(/^(\d{1,2}(?::\d{2})?)\s*(AM|PM)?(?:\s*(?:[–—-]|to|until)\s*(\d{1,2}(?::\d{2})?)\s*(AM|PM)?)?$/i);if(!m)return null;
+  let a1=m[2],a2=m[4];if(m[3]&&!a1&&a2){const h1=+m[1].split(":")[0],h2=+m[3].split(":")[0];a1=(a2.toUpperCase()==="PM"&&h1>h2&&h1!==12)?"AM":a2}
+  if(!a1&&!a2&&!/:/.test(m[1]))return null;
+  return [bsHM(m[1],a1),m[3]?bsHM(m[3],a2||a1):""]}
+function bsTitleCase(s){const small=/^(a|an|and|as|at|but|by|for|in|of|on|or|the|to|with)$/i;
+  return s.toLowerCase().split(/(\s+)/).map((w,i)=>/^\s+$/.test(w)||(i>0&&small.test(w))?w:w.replace(/^([“"(']*)(\w)/,(x,p,c)=>p+c.toUpperCase())).join("")}
+function bsLoc(x){x=(x||"").replace(/[.;,]+$/,"").trim();
+  return x.replace(/^(?:in|at)\s+(?:the\s+)?/i,"").replace(/\bS\.?\s?F\.?\s+Room\b/i,"Special Function Room").replace(/\bM\.?\s?P\.?\s+(?:Bldg\.?|Building)/i,"Multi-Purpose Building").replace(/^MPB$/i,"Multi-Purpose Building")
+    .replace(/\bSr\.?\s+Adult\b/i,"Senior Adult").replace(/\bBldg\.?/i,"Building").replace(/\bSS\s+R(?:oo)?m\b\.?/,"Sunday School Room").replace(/^front Sanctuary$/i,"Front of the Sanctuary").replace(/^(\w)/,c=>c.toUpperCase())}
+function bsAud(s){const a=[];if(/\b(children|kids?|preschool)\b|mission friends|ga.?s|ra.?s|children.s church/i.test(s))a.push("kids");if(/\b(youth|students?|vsm|teens?)\b/i.test(s))a.push("students");
+  if(/\bsenior adults?\b|young at heart/i.test(s))a.push("seniors");else if(/\b(adults?|men.?s|women.?s|ladies|wmu)\b/i.test(s))a.push("adults");if(/all ages|everyone|family/i.test(s))a.push("all");return [...new Set(a)]}
+function bsCat(s){return /\b(worship|service|revival|singing)\b/i.test(s)?/choir|singing/i.test(s)?"music":"worship":/bible|drill|sunday school/i.test(s)?"bible":/\bchoirs?\b|\bbells?\b|\bmusic\b|cantata|concert/i.test(s)?"music":
+  /mission|\bga.?s\b|\bra.?s\b|camp cale|offering|\bcircle\b|\bwmu\b/i.test(s)?"missions":/meeting|committee|conference|council|team/i.test(s)?"meetings":/prayer/i.test(s)?"prayer":/blood drive|outreach|community/i.test(s)?"outreach":
+  /breakfast|lunch|luncheon|supper|dinner|meal|fellowship|trip|party|picnic|pickleball|basketball|game/i.test(s)?"fellowship":""}
+/* one entry from the list: "9 AM – 11 AM – Pickleball in the Gym" */
+function bsEntry(date,line){
+  const out=[];let m=line.match(/^((?:\d{1,2}(?::\d{2})?\s*(?:AM|PM)?\s*[–—-]\s*)?\d{1,2}(?::\d{2})?\s*(?:AM|PM)?|noon|following (?:morning |evening )?worship|after (?:morning |evening )?worship|morning|afternoon|evening|all day|tba)\s*[–—-]\s*(.+)$/i);
+  let start="",end="",when="",rest=line;
+  if(m){const t=bsTimes(m[1].trim());if(t){start=t[0];end=t[1]}else when=bsTitleCase(m[1].trim());rest=m[2]}
+  /* "“DEEP DIVE” (Adults); VSM (Youth); Faith Builders Kids (Children)" -> 3 entries */
+  for(let part of rest.split(/\s*;\s*/)){
+    part=part.trim();if(!part)continue;
+    const segs=part.split(/(?<!\d)\s+[–—-]\s+(?!\d)|(?<=\S)\s*–\s*$/).map(x=>x.trim()).filter(Boolean);
+    let title=segs.shift()||"",loc="";const extra=[];
+    for(const sg of segs){if(!loc&&BS_ROOM.test(sg)&&sg.split(" ").length<=7)loc=bsLoc(sg.replace(/\s*\([^)]*\)/,""));else extra.push(sg)}
+    const par=(title.match(/\(([^)]*)\)/)||[])[1]||"";title=title.replace(/\s*\([^)]*\)\s*/g," ").trim();
+    title=title.replace(/\bMtg\.?/i,"Meeting");
+    if(/^(no|cancel+ed)\b/i.test(title)||new RegExp("^(?:"+BS_DAYS+")$","i").test(title))continue; /* "NO Bible Drill" notices */
+    const atm=!loc&&title.match(/^(.{6,}?)\s+(?:meets\s+)?at\s+((?:the\s+)?home of\s+.+|[A-Z][^,]*)$/);
+    if(atm){title=atm[1];loc=bsLoc(atm[2].replace(/^the\s+/i,""))}
+    const inl=title.match(/^(.+?)\s+(?:in|at)\s+(?:the\s+)?((?:[A-Z][\w’'.]*\s?){1,5})$/);
+    if(!loc&&inl&&BS_ROOM.test(inl[2])){title=inl[1];loc=bsLoc(inl[2])}
+    const pl=part.match(/\(([^)]*)\)\s*$/);if(pl&&!par&&!BS_ROOM.test(pl[1]))extra.push(pl[1]);
+    title=title.replace(/[“”"]/g,"").replace(/\s+/g," ").trim();
+    const wm=title.match(/^(.+?)\s+with\s+(.+)$/i);if(wm&&!/^\d/.test(wm[2])){title=wm[1];extra.unshift("With "+wm[2])}
+    if(title===title.toUpperCase()&&/[A-Z]{3}/.test(title)&&!/^[A-Z]{2,4}$/.test(title))title=bsTitleCase(title);
+    else title=title.replace(/\b([A-Z]{4,})\b/g,w=>w==="RHBC"||w==="WMU"?w:bsTitleCase(w));
+    if(!title)continue;
+    const desc=[when?when:"",extra.join(" · ")].filter(Boolean).join(" · ");
+    out.push({date,start,end,title,loc,desc,auds:bsAud(par+" "+title),cats:[bsCat(title)].filter(Boolean),src:"list",raw:line})}
+  return out}
+function bsList(lines,bdate){
+  const dayRe=new RegExp("^(?:"+BS_DAYS+"),?\\s+("+BS_MON+")\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*(?:[–—-]\\s*(.+))?$","i");
+  const out=[],ents=[];let date="",cur=null;
+  for(const l of lines){
+    const s=l.s;if(/this week at|^next week|^coming up|^upcoming/i.test(s)){cur=null;continue}
+    const d=s.match(dayRe);
+    if(d){date=bsYmd(bdate,BS_MONTHS.indexOf(d[1].toLowerCase())+1,+d[2]);cur=null;
+      if(d[3]){const t=d[3].replace(/[“”"]/g,"").trim();out.push({date,start:"",end:"",title:t,loc:"",desc:"",auds:[],cats:[],src:"list",allDay:true,raw:s})}continue}
+    if(!date)continue;
+    if(cur&&l.x>cur.x+12){cur.s+=" "+s;continue}  /* wrapped line */
+    cur={x:l.x,s,date};ents.push(cur)}
+  for(const e of ents)out.push(...bsEntry(e.date,e.s));
+  return out.filter(e=>e.date>=bdate)}
+/* announcements: paragraphs that name a date */
+function bsParas(lines){const P=[];let cur=null,prev=null;
+  for(const l of lines){const gap=prev?l.y-prev.y:99;
+    const caps=l.s===l.s.toUpperCase()&&/[A-Z]{3}/.test(l.s)&&l.s.split(" ").length<=8;
+    if(!cur||gap>21||(caps&&!(prev&&prev.caps))){cur={lines:[]};P.push(cur)}
+    cur.lines.push(l.s);l.caps=caps;prev=l}
+  return P.map(p=>{let head=p.lines[0]===p.lines[0].toUpperCase()&&/[A-Z]{3}/.test(p.lines[0])?p.lines[0]:"";
+    if(head){let i=1;while(i<p.lines.length&&p.lines[i]===p.lines[i].toUpperCase()&&/[A-Z]{3}/.test(p.lines[i]))head+=" "+p.lines[i++]}
+    if(!head){const c=p.lines[0].match(/^([A-Z][\w’' &]{2,40}):\s/);if(c&&c[1].split(" ").length<=4)head=c[1]}
+    return {head,text:p.lines.join(" ").replace(/(\w)- (\w)/g,"$1$2").replace(/\s+/g," ").replace(/\s+([,.;:])/g,"$1").trim()}})}
+function bsAnn(paras,bdate){
+  const out=[],dRe=new RegExp("(?:\\b("+BS_DAYS+"),?\\s+)?\\b("+BS_MON+")\\s+(\\d{1,2})(?:st|nd|rd|th)?\\b","gi");
+  for(const p of paras){
+    const tx=p.text;if(/deacon team|greeters|ushers|counting committee|offering team|attendance|volunteers \(|prayer list|college student of the week/i.test(tx.slice(0,40)))continue;
+    let m,nth=0;dRe.lastIndex=0;
+    while((m=dRe.exec(tx))){
+      const before=tx.slice(Math.max(0,m.index-30),m.index);
+      if(/\b(by|before|until|through|thru|deadline|due|ends?|starting|beginning|from)\s*$/i.test(before))continue; /* sign-up deadlines and ranges */
+      const date=bsYmd(bdate,BS_MONTHS.indexOf(m[2].toLowerCase())+1,+m[3]);if(date<bdate)continue;
+      const after=tx.slice(m.index+m[0].length,m.index+m[0].length+90);
+      const tm=after.match(/^[^.]{0,45}?(?:@|\bat\b|\bfrom\b|,)\s*(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?(?:\s*[–—-]\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM))?)(?=[\s.,;]|$)/i)
+        ||after.match(/^[^.]{0,4}\.\s[^.]{0,40}?\bat\s(\d{1,2}(?::\d{2})?\s*(?:AM|PM))/i);
+      let start="",end="";if(tm){const t=bsTimes(tm[1].trim());if(t){start=t[0];end=t[1]}}
+      /* title: the words before the date in that sentence, or the heading */
+      const sent=tx.slice(0,m.index).split(/(?<=[.!?])\s+/).pop()||"";
+      let title=sent.replace(/[–—-]\s*$/,"").trim()
+        .replace(/^(?:also,?\s*)?(?:on|the next|our annual|our next|our|the annual|the|join us for|please join us for)\s+/i,"")
+        .replace(/^.*?\bis (?:sponsoring|hosting|having|planning) (?:an? |the )?/i,"")
+        .replace(/\s+(?:will be held|will be|will meet|is planned|is scheduled|is|are|has been scheduled)?\s*(?:on|for|at)?\s*$/i,"")
+        .replace(/\s+(?:will be|is|are)$/i,"").replace(/[,–—-]+$/,"").replace(/^[“"]|[”"]$/g,"").trim();
+      title=title.replace(/\s+(?:join us|will begin|will resume|begins|starts)\s*$/i,"").trim();
+      const first=!nth++;
+      if(p.head&&first)title=bsTitleCase(p.head.replace(/[:!.]+$/,""));
+      if(!title||title.split(" ").length>8||/\b(will|we|you|has|have|had|booked|held|available)\b/i.test(title)||/^[a-z]/.test(title)||/^(on|at|for|by|tonight|today|this)$/i.test(title))title=p.head?bsTitleCase(p.head.replace(/[:!.]+$/,"")):"";
+      if(!title){const tw=after.match(/there will be (?:a|an)\s+([^.,]{3,60})/i);if(tw)title=tw[1].replace(/\s+(at|in|for)\s.*$/,"").replace(/^\w/,c=>c.toUpperCase())}
+      if(!title)continue;
+      if(title===title.toUpperCase())title=bsTitleCase(title);
+      const lm=after.match(/\bin the ((?:[A-Z][\w’'-]*\s?){1,5})/);const loc=lm&&BS_ROOM.test(lm[1])?bsLoc(lm[1]):"";
+      const att=!start&&/^[\s,]*(?:at|during|in)\s+(?:the\s+)?(?:morning worship|worship service|11 ?am)/i.test(after)&&new Date(date+"T12:00").getDay()===0;
+      out.push({date,start,end,title,loc,desc:tx,auds:bsAud(title+" "+tx.slice(0,120)),cats:[bsCat(title+" "+(att?"offering":""))].filter(Boolean),src:"ann",attachWorship:att,raw:tx})}}
+  return out}
+/* pages: [{w,h,items:[{s,x,y,w,h}]}] from pdf.js; page 1 = order of worship */
+function bsScan(pages,bdate){
+  let lst=[],ann=[];
+  pages.forEach((pg,i)=>{const W=pg.w,third=W/3;
+    for(let c=0;c<3;c++){const L=bsLines(pg,c?third*c-16:0,c<2?third*(c+1)-16:W+1);
+      const txt=L.map(l=>l.s).join("\n");
+      if(/this week at rhbc|next week \. \./i.test(txt))lst=lst.concat(bsList(L,bdate));
+      else if(/deacon team of the week|deacon greeters|ushers/i.test(txt))continue;     /* page 2, left column */
+      else if(/\bprelude\b|call to worship|offertory|church staff|contact information/i.test(txt))continue; /* order of worship, welcome, staff */
+      else ann=ann.concat(bsAnn(bsParas(L),bdate))}});
+  return {list:lst,ann}}
+/* ---- compare with the calendar ---- */
+var BS_STOP=new Set("the a an and of for to in at on with all ages our rhbc church meet meets meeting practice service night ministry ministries team teams kid kids child children childrens youth student students adult adults".split(" "));
+var BS_SYN={vsm:"vertical student ministry",fbk:"faith builders kids",ga:"gas",ra:"ras",mtg:"meeting",bldg:"building"};
+function bsTok(t){return new Set((t||"").toLowerCase().replace(/[’'`]/g,"").replace(/&/g," ").replace(/[^a-z0-9 ]/g," ").split(/\s+/)
+  .flatMap(w=>(BS_SYN[w]||w).split(" ")).filter(w=>w&&!BS_STOP.has(w)).map(w=>w.length>3?w.replace(/(ies)$/,"y").replace(/s$/,""):w))}
+function bsSim(a,b){const A=bsTok(a),B=bsTok(b),raw=x=>(x||"").toLowerCase().replace(/[^a-z0-9]/g,"");if(raw(a)&&raw(a)===raw(b))return 1;if(!A.size||!B.size)return 0;let n=0;for(const w of A)if(B.has(w))n++;return n/Math.min(A.size,B.size)}
+/* cands from bsScan; onDate(k) -> [{title,start,what}] already on the calendar; skip = titles never to suggest */
+function bsReview(scan,onDate,skip,worshipStart){
+  const ws=worshipStart||"11:00";let C=scan.list.slice();
+  /* words after "Worship –" and other items at worship time on Sunday become labels on Morning Worship */
+  const extra=[];C=C.filter(c=>{const sun=new Date(c.date+"T12:00").getDay()===0;
+    if(sun&&c.start===ws&&/^(morning )?worship$/i.test(c.title)){c.desc.split(" · ").filter(x=>x&&!/^(following|after)/i.test(x)).forEach(x=>extra.push({...c,title:x,desc:"",attachWorship:true,loc:"",cats:[bsCat(x)].filter(Boolean),auds:bsAud(x)}));c.desc=""}
+    else if(sun&&c.start===ws&&!/worship/i.test(c.title)){c.attachWorship=true}
+    return true});C=C.concat(extra);
+  /* announcements fill in details for the same item in the list */
+  for(const a of scan.ann){const same=C.find(c=>c.date===a.date&&(bsSim(c.title,a.title)>=.5||(a.start&&c.start===a.start&&bsSim(c.title,a.title)>0)||(!a.title.includes(" ")&&bsSim(c.title,a.title)>0)));
+    if(same){if(!same.descA)same.descA=a.desc;if(!same.loc&&a.loc)same.loc=a.loc;if(!same.start&&a.start){same.start=a.start;same.end=a.end}}
+    else if(bsTok(a.title).size&&!C.some(c=>c.date===a.date&&c.title===a.title))C.push(a)}
+  const sk=new Set((skip||[]).map(x=>[...bsTok(x)].sort().join(" ")));
+  const seen=new Set(),rows=[];
+  for(const c of C){c.desc=[c.desc,c.descA].filter(Boolean).join("\n\n");delete c.descA;
+    const key=c.date+"|"+[...bsTok(c.title)].sort().join(" ");if(seen.has(key))continue;seen.add(key);
+    if(sk.has([...bsTok(c.title)].sort().join(" "))){rows.push({c,status:"skip"});continue}
+    let best=null,bs=-1;for(const x of onDate(c.date).filter(x=>!!c.attachWorship===!!x.label)){const sm=bsSim(c.title,x.title)+(c.start&&x.start===c.start?.25:0)+((c.auds||[]).some(u=>(x.auds||[]).includes(u))?.1:0);if(sm>bs){bs=sm;best=x}}
+    const sim=best?bsSim(c.title,best.title):0,same=best&&c.start&&best.start===c.start;
+    const st=!best?"new":(sim>=.6||(same&&sim>=.34))?"dup":(sim>=.3||same)?"maybe":"new";
+    rows.push({c,status:st,match:st==="new"?null:best})}
+  return rows.sort((a,b)=>(a.c.date+(a.c.start||"99")).localeCompare(b.c.date+(b.c.start||"99")))}
+/* ---- the review dialog: pick which events from the bulletin to add ---- */
+async function pdfPages(file){
+  if(!pdfjsP)pdfjsP=import(PDFJS+"pdf.min.mjs").then(m=>{m.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.mjs";return m});
+  const pdfjs=await pdfjsP;const doc=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer()),verbosity:0}).promise;
+  const out=[];for(let p=1;p<=Math.min(doc.numPages,2);p++){const pg=await doc.getPage(p),vp=pg.getViewport({scale:1}),tc=await pg.getTextContent();
+    out.push({w:vp.width,h:vp.height,items:tc.items.filter(i=>typeof i.str==="string").map(i=>({s:i.str,x:i.transform[4],y:vp.height-i.transform[5],w:i.width,h:i.height}))})}
+  return out}
+/* what is already on the calendar that day */
+function bsOnDate(k){const out=[],dow=fromKey(k).getDay();
+  for(const w of state.weekly||[])if(w.dow===dow)out.push({title:w.title,start:w.start||"",what:"Weekly",auds:evAuds(w)});
+  for(const m of state.monthly||[])if(m.title&&moOn(m,k)){const i=moInst(m,k);out.push({title:m.title,start:i.start||"",what:"Monthly"})}
+  for(const e of state.events||[])if(e.date===k)out.push({title:e.title,start:e.start||"",what:e.attach?"Label":"One-Time",label:!!e.attach});
+  const b=(state.bulletins||[]).find(x=>(x.d||"").slice(0,10)===k&&x.t);if(b)out.push({title:b.t,start:"",what:"Special Day",label:true});
+  return out}
+const bsDay=k=>fromKey(k).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+function openEventScan(src,bdate){
+  const dlg=()=>$("overlay16").querySelector(".dialog");
+  gOpen("Events in This Bulletin","Reading the bulletin…",[el("p",{className:"bs-wait",textContent:"Looking for events in the This Week and Next Week lists and the announcements…"})]);dlg().classList.add("bs-wide");
+  pdfPages(src).then(pages=>{
+    const wid=mainWorshipId(),w=(state.weekly||[]).find(x=>x.id===wid);
+    const rows=bsReview(bsScan(pages,bdate),bsOnDate,state.bulletinSkip||[],w?w.start:"11:00");
+    if(!rows.length){gOpen("Events in This Bulletin","No events were found in this bulletin. It may be saved as a picture, so its words can’t be read.",[el("div",{className:"dialog-actions"},gBtn("Close","primary",closeDlg))]);return}
+    bsRender(rows);dlg().classList.add("bs-wide")})
+  .catch(()=>gOpen("Events in This Bulletin","This PDF couldn’t be read, so no events were found. You can still add events with + Add.",[el("div",{className:"dialog-actions"},gBtn("Close","primary",closeDlg))]))}
+function bsRender(rows){
+  const today=nyKey(),R=rows.filter(r=>r.c.date>=today),past=rows.length-R.length;
+  R.forEach(r=>{if(r.on===undefined)r.on=r.status==="new"&&!/\breserved\b/i.test(r.c.title)});
+  const neu=R.filter(r=>r.status==="new"),may=R.filter(r=>r.status==="maybe"),dup=R.filter(r=>r.status==="dup"),skp=R.filter(r=>r.status==="skip");
+  const addB=el("button",{type:"button",className:"btn primary"});
+  const count=()=>{const n=neu.concat(may).filter(r=>r.on).length;addB.textContent=n?"Add "+n+" to the Calendar":"Add to the Calendar";addB.disabled=!n};
+  const opts=(o,v)=>Object.keys(o).map(k=>{const x=el("option",{value:k,textContent:typeof o[k]==="string"?o[k]:o[k].label});if(k===v)x.selected=true;return x});
+  const row=r=>{const c=r.c,box=el("div",{className:"bs-row"+(r.on?" on":"")});
+    const cb=el("input",{type:"checkbox"});cb.checked=r.on;cb.setAttribute("aria-label","Add "+c.title);
+    cb.onchange=()=>{r.on=cb.checked;box.classList.toggle("on",r.on);count()};
+    const when=el("span",{className:"bs-when"}),info=el("span",{className:"bs-info"});
+    const paint=()=>{when.textContent=bsDay(c.date)+" · "+(c.attachWorship?"Morning Worship":c.start?fmtSpan(c):"All Day");
+      const tags=[];if(c.attachWorship)tags.push("Label on Morning Worship");if(/\breserved\b/i.test(c.title))tags.push("Room Reservation");if(c.src==="ann")tags.push("From the Announcements");
+      info.replaceChildren(el("b",{textContent:c.title}),c.loc?el("span",{className:"bs-loc",textContent:c.loc}):"",...tags.map(t=>el("span",{className:"bs-tag",textContent:t})))};paint();
+    box.append(el("label",{className:"bs-pick"},cb,el("span",{className:"bs-txt"},when,info)));
+    if(r.status==="maybe"&&r.match)box.append(el("p",{className:"bs-maybe",textContent:"This may already be on the calendar as “"+r.match.title+"”"+(r.match.start?" at "+fmtTime(r.match.start):"")+" ("+r.match.what+"). Check it only if it’s a different event."}));
+    const ed=el("div",{className:"bs-edit",hidden:true});
+    const eb=gBtn("Edit","ghost small",()=>{if(ed.hidden&&!ed.firstChild)buildEd();ed.hidden=!ed.hidden;eb.textContent=ed.hidden?"Edit":"Done Editing";eb.setAttribute("aria-expanded",String(!ed.hidden))});
+    const sb=gBtn("Don’t Suggest Again","ghost small",()=>{(state.bulletinSkip||(state.bulletinSkip=[])).push(c.title);dirty=true;r.status="skip";r.on=false;bsRender(rows)});
+    sb.title="Never suggest “"+c.title+"” from a bulletin again";
+    box.append(el("div",{className:"bs-acts"},eb,sb),ed);
+    const buildEd=()=>{const f=(lab,n,cls)=>el("label",{className:"bs-f"+(cls?" "+cls:"")},el("span",{textContent:lab}),n);
+      const t=el("input",{type:"text",value:c.title}),d=el("input",{type:"date",value:c.date}),s=el("input",{type:"time",value:c.start||""}),e=el("input",{type:"time",value:c.end||""}),
+        l=el("input",{type:"text",value:c.loc||"",placeholder:"Optional"}),cat=el("select",{},el("option",{value:"",textContent:"None"}),...opts(CATS,(c.cats||[])[0]||"")),
+        ds=el("textarea",{rows:3,placeholder:"Optional"});ds.value=c.desc||"";
+      const aud=el("div",{className:"bs-auds"},...Object.keys(AUDS).map(k=>{const x=el("input",{type:"checkbox"});x.checked=(c.auds||[]).includes(k);x.onchange=()=>{c.auds=Object.keys(AUDS).filter((k2,i)=>aud.querySelectorAll("input")[i].checked)};return el("label",{},x,AUDS[k])}));
+      const lb=el("input",{type:"checkbox"});lb.checked=!!c.attachWorship;
+      const lbw=el("label",{className:"bs-f full bs-lab"},lb,el("span",{textContent:"Show as a Label on Morning Worship"}));
+      const sync=()=>{c.title=t.value.trim()||c.title;if(/^\d{4}-\d{2}-\d{2}$/.test(d.value))c.date=d.value;c.start=s.value;c.end=s.value?e.value:"";c.loc=l.value.trim();c.cats=cat.value?[cat.value]:[];c.desc=ds.value;c.attachWorship=lb.checked&&fromKey(c.date).getDay()===0;
+        lbw.hidden=fromKey(c.date).getDay()!==0;s.disabled=e.disabled=c.attachWorship;paint()};
+      [t,d,s,e,l,cat,ds,lb].forEach(x=>x.addEventListener("input",sync));[d,lb,cat].forEach(x=>x.addEventListener("change",sync));
+      ed.append(f("Title",t,"full"),f("Date",d),f("Ministry",cat),f("Start Time",s),f("End Time",e),f("Location",l,"full"),el("div",{className:"bs-f full"},el("span",{textContent:"Who It’s For"}),aud),lbw,f("Details",ds,"full"));sync()};
+    return box};
+  const sec=(title,lead,list,open)=>{if(!list.length)return "";const s=el("section",{className:"bs-sec"},el("h3",{textContent:title+" ("+list.length+")"}),lead?el("p",{className:"meta",textContent:lead}):"",...list.map(row));return s};
+  const fold=(title,lead,list,fn)=>{if(!list.length)return "";return el("details",{className:"bs-fold"},el("summary",{textContent:title+" ("+list.length+")"}),lead?el("p",{className:"meta",textContent:lead}):"",...list.map(fn))};
+  const plain=r=>el("p",{className:"bs-plain"},el("span",{className:"bs-when",textContent:bsDay(r.c.date)+(r.c.start?" · "+fmtTime(r.c.start):"")})," "+r.c.title+(r.match?"  →  on the calendar as “"+r.match.title+"”":""));
+  const unskip=r=>{const p=plain(r);p.append(" ",gBtn("Suggest Again","ghost small",()=>{const n=bsTok(r.c.title);state.bulletinSkip=(state.bulletinSkip||[]).filter(x=>[...bsTok(x)].sort().join(" ")!==[...n].sort().join(" "));dirty=true;
+    rows.forEach(x=>{if(x.status==="skip"&&bsSim(x.c.title,r.c.title)===1){x.status="new";x.on=undefined}});bsRender(rows)}));return p};
+  addB.onclick=()=>{const wid=mainWorshipId(),w=(state.weekly||[]).find(x=>x.id===wid);let n=0;
+    for(const r of neu.concat(may)){if(!r.on)continue;const c=r.c;if(!c.title.trim())continue;
+      const rec={id:newId("e"),title:c.title.trim(),date:c.date,cats:c.cats||[],auds:c.auds||[],cat:(c.cats||[])[0]||"",start:c.start||"",end:c.start&&c.end>c.start?c.end:"",loc:normLoc(c.loc||""),desc:(c.desc||"").trim(),url:""};
+      if(c.attachWorship&&w){rec.attach=w.id;rec.start=w.start;rec.end=w.end||"";rec.loc=""}
+      if(rec.loc)rememberLocation(rec.loc);state.events.push(rec);n++}
+    state.events.sort(sortEv);published(n===1?"1 event added to the calendar.":n+" events added to the calendar.")};
+  count();
+  const body=[
+    el("p",{className:"meta bs-lead",textContent:"These came from the This Week and Next Week lists and the announcements. Uncheck any you don’t want, or press Edit to fix one before adding it."+(past?" "+past+" item"+(past>1?"s":"")+" from dates that have passed "+(past>1?"aren’t":"isn’t")+" shown.":"")}),
+    sec("New Events","",neu)||el("p",{className:"meta",textContent:"No new events were found. Everything in this bulletin is already on the calendar."}),
+    sec("Might Already Be on the Calendar","These look like something already on the calendar, but the wording is different. They aren’t checked; check one only if it’s a different event.",may),
+    fold("Already on the Calendar","These match something already on the calendar, so they won’t be added again.",dup,plain),
+    fold("Not Suggested","You chose not to have these suggested from bulletins.",skp,unskip),
+    el("div",{className:"dialog-actions"},gBtn("Not Now","ghost",()=>{closeDlg();if(dirty){editing=true;renderAll()}}),addB)];
+  gOpen("Events in This Bulletin","",body);$("overlay16").querySelector(".dialog").classList.add("bs-wide")}
 
 /* careers */
 function renderJobs(){
@@ -3070,7 +3341,7 @@ function savedDlg(){const r=dlgRet;dlgRet=null;if(r&&r.save)r.fn()}
 function newId(p){return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 function armDel(b,fn,label){label=label||"Remove";b.textContent=label;delete b.dataset.armed;b.onclick=()=>{if(!b.dataset.armed){b.dataset.armed="1";b.textContent="Tap Again to Remove";return}fn()}}
 function gBtn(t,cls,fn){const b=el("button",{type:"button",className:"btn "+cls,textContent:t});b.onclick=fn;return b}
-function gOpen(title,lead,nodes){closeDlg();$("g-title").textContent=title;$("g-lead").textContent=lead||"";$("g-lead").hidden=!lead;$("g-body").replaceChildren(...nodes);$("overlay16").hidden=false}
+function gOpen(title,lead,nodes){closeDlg();$("overlay16").querySelector(".dialog").classList.remove("bs-wide");$("g-title").textContent=title;$("g-lead").textContent=lead||"";$("g-lead").hidden=!lead;$("g-body").replaceChildren(...nodes);$("overlay16").hidden=false}
 function gForm(fields,saveLabel,onSave,onDel,cancelLabel,extra){const f=el("form",{className:"form",noValidate:true});fields.forEach(x=>f.append(x));
   const er=el("p",{className:"err full",hidden:true});f.append(er);const acts=el("div",{className:"dialog-actions full"});
   if(onDel){const d=el("button",{type:"button",className:"btn danger"});armDel(d,onDel);acts.append(d)}
@@ -3701,6 +3972,10 @@ async function fillFromPdf(src,force){
   catch(e){hint.textContent="This PDF couldn’t be read. Type the sermon in if you’d like it shown."}
 }
 $("d-file").addEventListener("change",()=>{const f=$("d-file").files[0];if(!f||docKind!=="bulletins")return;$("d-read").hidden=false;fillFromPdf(f,false)});
+$("d-scan").onclick=async()=>{const b=$("d-scan"),it=docIdx>=0?state[docKind][docIdx]:null,d=$("d-date").value;if(!it)return;
+  b.disabled=true;b.textContent="Opening…";
+  try{const h=docHref(it);if(!h)throw 0;const r=await fetch(h);if(!r.ok)throw 0;const src=await r.blob();openEventScan(src,/^\d{4}-\d{2}-\d{2}$/.test(d)?d:it.d.slice(0,10))}
+  catch(e){b.disabled=false;b.textContent="Find New Events";$("d-err").textContent=it.u&&!it.a?"That linked PDF can’t be opened from here. Upload the file instead to find its events.":"The PDF couldn’t be opened. Try again.";$("d-err").hidden=false}};
 $("d-read").onclick=async()=>{const b=$("d-read"),f=$("d-file").files[0],it=docIdx>=0?state[docKind][docIdx]:null;
   b.disabled=true;b.textContent="Reading…";
   try{let src=f;
