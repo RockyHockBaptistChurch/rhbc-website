@@ -477,6 +477,7 @@ a.card:hover{border-color:var(--muted)}
 @media (max-width:640px){.svc-item{grid-template-columns:48px minmax(0,1fr);gap:12px;padding:12px 14px}.svc-side{grid-column:2}.svc-date b{font-size:1.35rem}}
 
 /* TEST: date styles */
+body.a-top .svc-date{align-self:start;margin-top:2px}
 body.d-blk .svc-date small{color:var(--ink);font-weight:800}
 body.d-blk .svc-date b{color:var(--brand-hi)}
 body.d-mini .svc-date{width:44px;border-radius:6px;padding-bottom:2px}
@@ -940,10 +941,9 @@ textarea{min-height:84px;resize:vertical}
 }
 </style>
 
-<div class="testbar" role="region" aria-label="Test site options"><b>TEST SITE</b>
-<span>Date Style: <span class="tg" data-g="d" id="tgDate"><button type="button" data-v="" aria-pressed="true">All Red</button><button type="button" data-v="d-mix" aria-pressed="false">Red Month</button><button type="button" data-v="d-blk" aria-pressed="false">Black Month & Year, Red Day</button><button type="button" data-v="d-grey" aria-pressed="false">Black & Grey</button><button type="button" data-v="d-chip" aria-pressed="false">Calendar Chip</button><button type="button" data-v="d-mini" aria-pressed="false">Compact Chip</button></span></span>
-<span>Series Colors: <span class="tg" data-g="s" id="tgSer"><button type="button" data-v="" aria-pressed="true">Black Series, Red Name</button><button type="button" data-v="s-red" aria-pressed="false">Red Series, Grey Name</button></span></span></div>
-<script>document.addEventListener("click",e=>{const b=e.target.closest(".testbar .tg button");if(!b)return;const g=b.parentNode;g.querySelectorAll("button").forEach(x=>{if(x.dataset.v)document.body.classList.remove(x.dataset.v);x.setAttribute("aria-pressed",x===b)});if(b.dataset.v)document.body.classList.add(b.dataset.v)});</script>
+<div class="testbar" role="region" aria-label="Test site options"><b>TEST SITE</b><span>Compact Chip · Red Series, Grey Name</span>
+<span>Chip Position: <span class="tg"><button type="button" data-v="a-top" aria-pressed="true">Top</button><button type="button" data-v="" aria-pressed="false">Centered</button></span></span></div>
+<script>document.body.classList.add("d-mini","s-red","a-top");document.addEventListener("click",e=>{const b=e.target.closest(".testbar .tg button");if(!b)return;document.body.classList.toggle("a-top",b.dataset.v==="a-top");b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});</script>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#home" aria-label="Rocky Hock Baptist Church home">
