@@ -3572,14 +3572,7 @@
    "cat": "music"
   }
  ],
- "alert": {
-  "kind": "cancel",
-  "title": "Test",
-  "details": "",
-  "url": "",
-  "urlText": "",
-  "until": ""
- },
+ "alert": null,
  "photos": [
   {
    "id": "phmvukd3sh0",
