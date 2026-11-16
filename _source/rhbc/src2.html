@@ -480,7 +480,7 @@ a.card:hover{border-color:var(--muted)}
 .lp-sermon .bref{font:600 .95rem/1.4 var(--body);color:var(--brand-hi);background:color-mix(in srgb,var(--brand-hi) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--brand-hi) 22%,transparent);border-radius:999px;padding:3px 12px;cursor:pointer}
 .lp-sermon .bref:hover,.lp-sermon .bref[aria-expanded="true"]{background:var(--brand-hi);color:var(--surface);border-color:var(--brand-hi)}
 .lp-sermon dl>div{align-items:center}
-.lp-sermon .series{font-size:.88rem;color:var(--muted);font-style:italic}
+.lp-sermon .series{font-size:.88rem;color:var(--brand-hi);font-style:italic}
 .lp-sermon a{font-size:.92rem;font-weight:600}
 .serm-box{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .serm-box legend{font-size:.85rem;font-weight:600;padding:0 6px}
@@ -3768,7 +3768,8 @@ function renderSermon(dk,live,label,bo){
   box.replaceChildren(el("div",{className:"lp-top"},el("p",{className:"eyebrow",textContent:(s.title||s.scr||s.by)?(live?"Today’s Sermon":"Sermon"):(live?"Today’s Service":"Service")}),tag));
   if(b.t)box.append(el("p",{className:"lp-day",textContent:b.t}));
   if(s.title)box.append(el("h3",{textContent:"“"+s.title+"”"}));
-  if(s.series)box.append(el("p",{className:"series",textContent:"Series: "+s.series}));
+  /* skip the series line when the title already starts with the series name (sermons with no title of their own) */
+  if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))box.append(el("p",{className:"series",textContent:"Series: "+s.series}));
   if(dl.children.length)box.append(dl);
 }
 
