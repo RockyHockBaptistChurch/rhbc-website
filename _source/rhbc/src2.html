@@ -457,16 +457,20 @@ a.card:hover{border-color:var(--muted)}
 .svc-item{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:16px;align-items:center;width:100%;padding:14px 18px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .svc-item:hover{background:var(--wash)}
 .svc-item[aria-current="true"]{background:color-mix(in srgb,var(--brand-hi) 7%,var(--surface));box-shadow:inset 3px 0 0 var(--brand-hi)}
-.svc-date{display:grid;justify-items:center;gap:1px;color:var(--brand-hi)}
+.svc-date{display:grid;justify-items:center;gap:0;width:44px;max-width:100%;justify-self:center;align-self:start;margin-top:2px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg);padding-bottom:2px;font-variant-numeric:tabular-nums}
 .svc-date small{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.svc-date b{font-family:var(--display);font-weight:400;font-size:1.6rem;line-height:1}
+.svc-date b{font-family:var(--display);font-weight:400;font-size:1.2rem;line-height:1.25;color:var(--ink)}
+.svc-date small:first-child{width:100%;text-align:center;font-size:.6rem;padding:2px 0;color:var(--on-brand);background:var(--brand)}
+.svc-date small:last-child{font-size:.56rem;letter-spacing:.06em;color:var(--muted)}
 .svc-body{display:grid;gap:3px;min-width:0}
 .svc-body .t{font-weight:600;line-height:1.35}
+.svc-body .ser{font-size:.84rem;font-weight:600;color:var(--muted);line-height:1.35}
+.svc-body .ser b{color:var(--brand-hi);font-weight:700}
 .svc-body .m{font-size:.86rem;color:var(--muted)}
 .svc-body .now{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-hi)}
 .svc-side{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.84rem;white-space:nowrap}
 .svc-side svg{color:var(--brand-hi)}
-@media (max-width:640px){.svc-item{grid-template-columns:48px minmax(0,1fr);gap:12px;padding:12px 14px}.svc-side{grid-column:2}.svc-date b{font-size:1.35rem}}
+@media (max-width:640px){.svc-item{grid-template-columns:48px minmax(0,1fr);gap:12px;padding:12px 14px}.svc-side{grid-column:2}}
 .lp-note-btn{margin-left:8px;font:600 .86rem/1 var(--body);color:var(--brand-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lp-head.recent b{color:var(--muted)}
 .lp-rec b{color:var(--muted)!important;font-weight:700;text-transform:uppercase}
@@ -480,7 +484,8 @@ a.card:hover{border-color:var(--muted)}
 .lp-sermon .bref{font:600 .95rem/1.4 var(--body);color:var(--brand-hi);background:color-mix(in srgb,var(--brand-hi) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--brand-hi) 22%,transparent);border-radius:999px;padding:3px 12px;cursor:pointer}
 .lp-sermon .bref:hover,.lp-sermon .bref[aria-expanded="true"]{background:var(--brand-hi);color:var(--surface);border-color:var(--brand-hi)}
 .lp-sermon dl>div{align-items:center}
-.lp-sermon .series{font-size:.88rem;color:var(--brand-hi)}
+.lp-sermon .series{font-size:.88rem;font-weight:600;color:var(--muted)}
+.lp-sermon .series b{color:var(--brand-hi);font-weight:700}
 .lp-sermon a{font-size:.92rem;font-weight:600}
 .serm-box{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .serm-box legend{font-size:.85rem;font-weight:600;padding:0 6px}
@@ -3769,7 +3774,7 @@ function renderSermon(dk,live,label,bo){
   if(b.t)box.append(el("p",{className:"lp-day",textContent:b.t}));
   if(s.title)box.append(el("h3",{textContent:"“"+s.title+"”"}));
   /* skip the series line when the title already starts with the series name (sermons with no title of their own) */
-  if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))box.append(el("p",{className:"series",textContent:"Series: "+s.series}));
+  if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))box.append(el("p",{className:"series"},el("b",{textContent:"Series:"})," "+s.series));
   if(dl.children.length)box.append(dl);
 }
 
@@ -3831,6 +3836,8 @@ function renderServices(){
     const cur=picked?picked.id===v.id:(showingRecent&&latest&&v.id===latest.id);
     if(cur||b&&b.t)body.append(el("span",{className:"now"},[cur?"Now showing":"",b&&b.t?b.t:""].filter(Boolean).join(" · ")));
     body.append(el("span",{className:"t",textContent:s.title?"“"+s.title+"”":svcName(v)}));
+    /* short series name (the part before the colon) under the title */
+    if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))body.append(el("span",{className:"ser"},el("b",{textContent:"Series:"})," "+s.series.split(":")[0].trim()));
     const meta=[s.scr,s.by].filter(Boolean).join(" · ");if(meta)body.append(el("span",{className:"m",textContent:meta}));
     const side=el("span",{className:"svc-side"});if(v.dur)side.append(fmtDur(v.dur));side.insertAdjacentHTML("beforeend",PLAY_ICON);
     const btn=el("button",{type:"button",className:"svc-item"},date,body,side);
