@@ -2823,7 +2823,7 @@ $("dForm").addEventListener("submit",async ev=>{
     if(!u&&old&&(old.a||old.u)){if(old.a)rec.a=old.a;else rec.u=old.u}
     else{if(!safeUrl(u))return err("Paste the full link to the PDF, starting with https://");rec.u=u}
   }
-  if(isB){const sm={title:$("d-s-title").value.trim(),scr:$("d-s-scr").value.trim(),by:$("d-s-by").value.trim(),series:$("d-s-series").value.trim()};
+  if(isB){const sm={title:$("d-s-title").value.trim(),scr:$("d-s-scr").value.trim(),by:cleanBy($("d-s-by").value),series:$("d-s-series").value.trim()};
     if(sm.title||sm.scr||sm.by)rec.s=sm}
   const list=state[docKind]||(state[docKind]=[]);
   if(docIdx>=0)list.splice(docIdx,1);
@@ -3657,6 +3657,8 @@ $("peForm").addEventListener("submit",ev=>{ev.preventDefault();const p=state.pho
   dirty=true;editing=true;closeDlg();renderAll();toast("Caption saved. Press “Save Changes” to publish.")});
 
 /* sermon details read from the bulletin PDF (pdf.js, loaded only when needed) */
+/* speaker name only: drop a description after a comma ("Dr. Ron Cava, Former Senior Pastor"), keep Jr., Sr., II, III, IV */
+function cleanBy(x){x=(x||"").trim();const m=/^(.*?),\s*(.*)$/.exec(x);if(!m)return x;return /^(Jr|Sr|II|III|IV)\b\.?$/i.test(m[2].trim())?x:m[1].trim()}
 function parseSermon(L){
   const BOOKS="Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|Samuel|Kings|Chronicles|Ezra|Nehemiah|Esther|Job|Psalms?|Proverbs|Ecclesiastes|Song of (?:Solomon|Songs)|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|Corinthians|Galatians|Ephesians|Philippians|Colossians|Thessalonians|Timothy|Titus|Philemon|Hebrews|James|Peter|Jude|Revelation";
   const REF=new RegExp("\\b((?:[1-3]|I{1,3})\\s*)?("+BOOKS+")\\s+\\d+\\s*:\\s*\\d+(?:\\s*[-–—]\\s*\\d+(?:\\s*:\\s*\\d+)?)?(?:\\s*,\\s*\\d+(?:\\s*[-–—]\\s*\\d+)?)*");
@@ -3669,7 +3671,7 @@ function parseSermon(L){
   for(let j=i+1;j<L.length&&W.length<12;j++){const s=clean(L[j]);if(!s)continue;if(stop.test(s))break;W.push(s)}
   const res={title:"",scr:"",by:"",series:""};
   const txt=W.join("\n");
-  let m=WHO.exec(txt);if(m)res.by=m[0].trim().replace(/\s*(Title|Scripture|Sermon|Message|Text|Series|Passage)$/,"").replace(/[,;]$/,"");
+  let m=WHO.exec(txt);if(m)res.by=cleanBy(m[0]).replace(/\s*(Title|Scripture|Sermon|Message|Text|Series|Passage)$/,"").replace(/[,;]$/,"");
   // scripture: labeled, else first reference
   m=/Scripture\s*[:\-–]\s*([^\n]+)/i.exec(txt);let sc=m?m[1]:"";const r=REF.exec(sc||txt);if(r)sc=r[0];
   if(sc)res.scr=sc.replace(/\s*:\s*/g,":").replace(/\s*[-–—]\s*/g,"–").replace(/\s*,\s*/g,", ").replace(/\s+/g," ").trim();
