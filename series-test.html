@@ -468,19 +468,29 @@ a.card:hover{border-color:var(--muted)}
 .svc-date b{font-family:var(--display);font-weight:400;font-size:1.6rem;line-height:1}
 .svc-body{display:grid;gap:3px;min-width:0}
 .svc-body .t{font-weight:600;line-height:1.35}
+.svc-body .ser{font-size:.84rem;font-weight:600;color:var(--brand-hi);line-height:1.35}
+.svc-body .ser b{color:var(--ink);font-weight:700}
 .svc-body .m{font-size:.86rem;color:var(--muted)}
 .svc-body .now{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-hi)}
 .svc-side{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.84rem;white-space:nowrap}
 .svc-side svg{color:var(--brand-hi)}
 @media (max-width:640px){.svc-item{grid-template-columns:48px minmax(0,1fr);gap:12px;padding:12px 14px}.svc-side{grid-column:2}.svc-date b{font-size:1.35rem}}
-.svc-body .ser{font-size:.84rem;font-weight:600;color:var(--brand-hi);line-height:1.35}
-body:not(.t-above) .ser-top,body.t-above .ser-bot{display:none}
-body:not(.t-list) .svc-body .ser{display:none}
-body:not(.t-short) .ser-short,body.t-short .ser-full{display:none}
-.lp-sermon .ser-top{margin:0 0 -6px}
+
+/* TEST: date styles */
+body.d-mix .svc-date small:first-child{color:var(--brand-hi)}
+body.d-mix .svc-date b{color:var(--ink)}
+body.d-mix .svc-date small:last-child{color:var(--muted)}
+body.d-grey .svc-date{color:var(--muted)}
+body.d-grey .svc-date b{color:var(--ink)}
+body.d-chip .svc-date,body.d-outline .svc-date{gap:0;width:58px;max-width:100%;justify-self:center;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg);padding-bottom:4px}
+body.d-chip .svc-date small:first-child{width:100%;text-align:center;padding:3px 0;color:var(--on-brand);background:var(--brand)}
+body.d-chip .svc-date b,body.d-outline .svc-date b{color:var(--ink);line-height:1.3}
+body.d-chip .svc-date small:last-child,body.d-outline .svc-date small:last-child{color:var(--muted);font-size:.62rem}
+body.d-outline .svc-date{border:1.5px solid var(--brand-hi);background:var(--surface)}
+body.d-outline .svc-date small:first-child{padding-top:4px;color:var(--brand-hi)}
 .testbar{position:relative;z-index:9999;background:#E8B830;color:#2a1d00;font:600 .9rem/1.3 system-ui,sans-serif;padding:8px 14px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:center}
 .testbar b{letter-spacing:.12em}
-.testbar .tg{display:inline-flex;border:1px solid #2a1d00;border-radius:999px;overflow:hidden}
+.testbar .tg{display:inline-flex;flex-wrap:wrap;border:1px solid #2a1d00;border-radius:14px;overflow:hidden}
 .testbar .tg button{font:inherit;font-size:.84rem;background:transparent;color:#2a1d00;border:0;padding:4px 12px;cursor:pointer}
 .testbar .tg button[aria-pressed="true"]{background:#2a1d00;color:#E8B830}
 .lp-note-btn{margin-left:8px;font:600 .86rem/1 var(--body);color:var(--brand-hi);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
@@ -497,6 +507,7 @@ body:not(.t-short) .ser-short,body.t-short .ser-full{display:none}
 .lp-sermon .bref:hover,.lp-sermon .bref[aria-expanded="true"]{background:var(--brand-hi);color:var(--surface);border-color:var(--brand-hi)}
 .lp-sermon dl>div{align-items:center}
 .lp-sermon .series{font-size:.88rem;color:var(--brand-hi)}
+.lp-sermon .series b{color:var(--ink);font-weight:700}
 .lp-sermon a{font-size:.92rem;font-weight:600}
 .serm-box{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .serm-box legend{font-size:.85rem;font-weight:600;padding:0 6px}
@@ -922,10 +933,9 @@ textarea{min-height:84px;resize:vertical}
 }
 </style>
 
-<div class="testbar" role="region" aria-label="Test site options"><b>TEST SITE</b><span>Series Options</span>
-<span>Series Line: <span class="tg"><button type="button" data-k="t-above" data-v="0" aria-pressed="true">Below Title</button><button type="button" data-k="t-above" data-v="1" aria-pressed="false">Above Title</button></span></span>
-<span>Earlier Services: <span class="tg"><button type="button" data-k="t-list" data-v="0" aria-pressed="true">No Series</button><button type="button" data-k="t-list" data-v="1" aria-pressed="false">Full Name</button><button type="button" data-k="t-list" data-v="2" aria-pressed="false">Short Name</button></span></span></div>
-<script>document.addEventListener("click",e=>{const b=e.target.closest(".testbar .tg button");if(!b)return;document.body.classList.toggle(b.dataset.k,b.dataset.v!=="0");if(b.dataset.k==="t-list")document.body.classList.toggle("t-short",b.dataset.v==="2");b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});</script>
+<div class="testbar" role="region" aria-label="Test site options"><b>TEST SITE</b><span>Series below the title · Short name in Earlier Services</span>
+<span>Date Style: <span class="tg" id="tgDate"><button type="button" data-v="" aria-pressed="true">All Red</button><button type="button" data-v="d-mix" aria-pressed="false">Red Month</button><button type="button" data-v="d-grey" aria-pressed="false">Black & Grey</button><button type="button" data-v="d-chip" aria-pressed="false">Calendar Chip</button><button type="button" data-v="d-outline" aria-pressed="false">Outline Chip</button></span></span></div>
+<script>document.addEventListener("click",e=>{const b=e.target.closest("#tgDate button");if(!b)return;["d-mix","d-grey","d-chip","d-outline"].forEach(c=>document.body.classList.remove(c));if(b.dataset.v)document.body.classList.add(b.dataset.v);b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b))});</script>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#home" aria-label="Rocky Hock Baptist Church home">
@@ -3805,11 +3815,9 @@ function renderSermon(dk,live,label,bo){
   const tag=live?el("span",{className:"lp-live"},el("span",{className:"ldot",ariaHidden:"true"}),el("b",{textContent:"LIVE NOW"})):el("span",{className:"lp-live lp-rec"},el("b",{textContent:(label||"Most Recent Service")+" · "+shortDate(dk)}));
   box.replaceChildren(el("div",{className:"lp-top"},el("p",{className:"eyebrow",textContent:(s.title||s.scr||s.by)?(live?"Today’s Sermon":"Sermon"):(live?"Today’s Service":"Service")}),tag));
   if(b.t)box.append(el("p",{className:"lp-day",textContent:b.t}));
-  const serOk=s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase());
-  if(serOk)box.append(el("p",{className:"series ser-top",textContent:"Series: "+s.series}));
   if(s.title)box.append(el("h3",{textContent:"“"+s.title+"”"}));
   /* skip the series line when the title already starts with the series name (sermons with no title of their own) */
-  if(serOk)box.append(el("p",{className:"series ser-bot",textContent:"Series: "+s.series}));
+  if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))box.append(el("p",{className:"series"},el("b",{textContent:"Series:"})," "+s.series));
   if(dl.children.length)box.append(dl);
 }
 
@@ -3870,11 +3878,9 @@ function renderServices(){
     const body=el("span",{className:"svc-body"});
     const cur=picked?picked.id===v.id:(showingRecent&&latest&&v.id===latest.id);
     if(cur||b&&b.t)body.append(el("span",{className:"now"},[cur?"Now showing":"",b&&b.t?b.t:""].filter(Boolean).join(" · ")));
-    const lser=s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase())?s.series:"";
-    const lshort=lser.split(":")[0].trim();
-    if(lser)body.append(el("span",{className:"ser ser-top"},el("span",{className:"ser-full",textContent:"Series: "+lser}),el("span",{className:"ser-short",textContent:"Series: "+lshort})));
     body.append(el("span",{className:"t",textContent:s.title?"“"+s.title+"”":svcName(v)}));
-    if(lser)body.append(el("span",{className:"ser ser-bot"},el("span",{className:"ser-full",textContent:"Series: "+lser}),el("span",{className:"ser-short",textContent:"Series: "+lshort})));
+    /* short series name (the part before the colon) under the title */
+    if(s.series&&!(s.title||"").toLowerCase().startsWith(s.series.toLowerCase()))body.append(el("span",{className:"ser"},el("b",{textContent:"Series:"})," "+s.series.split(":")[0].trim()));
     const meta=[s.scr,s.by].filter(Boolean).join(" · ");if(meta)body.append(el("span",{className:"m",textContent:meta}));
     const side=el("span",{className:"svc-side"});if(v.dur)side.append(fmtDur(v.dur));side.insertAdjacentHTML("beforeend",PLAY_ICON);
     const btn=el("button",{type:"button",className:"svc-item"},date,body,side);
