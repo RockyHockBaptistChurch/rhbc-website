@@ -64,15 +64,18 @@ b = src.index('$("saveBtn").onclick=async()=>{')
 c = src.index('(function(){let p=null;try{p=sessionStorage.getItem(PENDING)}')
 src = src[:a] + src[c:]
 save_js = r'''$("saveBtn").onclick=async()=>{
-  if(!GH.ok||!dirty)return;
+  if(!GH.ok||!dirty||saving)return;
+  saving=true;doneAfterSave=false;
   $("saveBtn").disabled=true;$("saveMsg").textContent="Saving…";
   const body=JSON.stringify(state,null,1)+"\n";
   try{
     await GH.commit(body);
-    SAVED=JSON.parse(JSON.stringify(state));dirty=false;
+    SAVED=JSON.parse(JSON.stringify(state));dirty=false;saving=false;
+    if(doneAfterSave){doneAfterSave=false;editing=false}
     $("saveMsg").textContent="Saved";renderAll();
     toast("Saved. The public site updates in about a minute.");
   }catch(e){
+    saving=false;doneAfterSave=false;
     if(e.status===409||e.status===422){
       try{sessionStorage.setItem(PENDING,JSON.stringify(state))}catch(x){}
       toast("Someone else saved a moment ago. Reloading their version; you can restore your changes after.");

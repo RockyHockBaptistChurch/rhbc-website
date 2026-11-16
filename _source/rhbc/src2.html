@@ -2189,7 +2189,7 @@ function normalize(st){
   return st;
 }
 let state=normalize(JSON.parse(JSON.stringify(SAVED)));
-let dirty=false, editing=false, art=null, assetsApi=null;
+let dirty=false, editing=false, art=null, assetsApi=null, saving=false, doneAfterSave=false;
 
 /* ---------- routing ---------- */
 const SECTIONS={
@@ -2756,7 +2756,7 @@ function scrollToEl(n){if(!n)return;const hd=document.querySelector("header.top"
 function editJump(){scrollToEl(document.querySelector(".cal-bar"))}
 function dayJump(){if(!editing||calMode==="agenda")return;const p=$("dayPanel"),r=p.getBoundingClientRect();if(r.top>innerHeight*.55)scrollToEl(p)}
 document.querySelectorAll(".hero-add").forEach(b=>b.onclick=openChooser);
-$("doneBtn").onclick=()=>{if(dirty){toast("Save or discard your changes first.");return}editing=false;renderAll()};
+$("doneBtn").onclick=()=>{if(saving){doneAfterSave=true;$("saveMsg").textContent="Saving… Editing will close when done";return}if(dirty){toast("Save or discard your changes first.");return}editing=false;renderAll()};
 $("discardBtn").onclick=()=>{state=normalize(JSON.parse(JSON.stringify(SAVED)));dirty=false;renderAll();toast("Changes discarded.")};
 
 /* bulletins & newsletters */

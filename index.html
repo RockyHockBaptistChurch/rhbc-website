@@ -2213,7 +2213,7 @@ function normalize(st){
   return st;
 }
 let state=normalize(JSON.parse(JSON.stringify(SAVED)));
-let dirty=false, editing=false, art=null, assetsApi=null;
+let dirty=false, editing=false, art=null, assetsApi=null, saving=false, doneAfterSave=false;
 
 /* ---------- routing ---------- */
 const SECTIONS={
@@ -2780,7 +2780,7 @@ function scrollToEl(n){if(!n)return;const hd=document.querySelector("header.top"
 function editJump(){scrollToEl(document.querySelector(".cal-bar"))}
 function dayJump(){if(!editing||calMode==="agenda")return;const p=$("dayPanel"),r=p.getBoundingClientRect();if(r.top>innerHeight*.55)scrollToEl(p)}
 document.querySelectorAll(".hero-add").forEach(b=>b.onclick=openChooser);
-$("doneBtn").onclick=()=>{if(dirty){toast("Save or discard your changes first.");return}editing=false;renderAll()};
+$("doneBtn").onclick=()=>{if(saving){doneAfterSave=true;$("saveMsg").textContent="Saving… Editing will close when done";return}if(dirty){toast("Save or discard your changes first.");return}editing=false;renderAll()};
 $("discardBtn").onclick=()=>{state=normalize(JSON.parse(JSON.stringify(SAVED)));dirty=false;renderAll();toast("Changes discarded.")};
 
 /* bulletins & newsletters */
@@ -4054,15 +4054,18 @@ $("nForm").addEventListener("submit",ev=>{
 
 const PENDING="rhbc-pending";
 $("saveBtn").onclick=async()=>{
-  if(!GH.ok||!dirty)return;
+  if(!GH.ok||!dirty||saving)return;
+  saving=true;doneAfterSave=false;
   $("saveBtn").disabled=true;$("saveMsg").textContent="Saving…";
   const body=JSON.stringify(state,null,1)+"\n";
   try{
     await GH.commit(body);
-    SAVED=JSON.parse(JSON.stringify(state));dirty=false;
+    SAVED=JSON.parse(JSON.stringify(state));dirty=false;saving=false;
+    if(doneAfterSave){doneAfterSave=false;editing=false}
     $("saveMsg").textContent="Saved";renderAll();
     toast("Saved. The public site updates in about a minute.");
   }catch(e){
+    saving=false;doneAfterSave=false;
     if(e.status===409||e.status===422){
       try{sessionStorage.setItem(PENDING,JSON.stringify(state))}catch(x){}
       toast("Someone else saved a moment ago. Reloading their version; you can restore your changes after.");
