@@ -3572,14 +3572,7 @@
    "cat": "music"
   }
  ],
- "alert": {
-  "kind": "cancel",
-  "title": "Closed",
-  "details": "",
-  "url": "",
-  "urlText": "",
-  "until": "2026-11-16"
- },
+ "alert": null,
  "photos": [
   {
    "id": "phmvukd3sh0",
