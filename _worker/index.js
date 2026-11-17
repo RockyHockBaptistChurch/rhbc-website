@@ -14,6 +14,8 @@
 //   COPY_UPLOADS_TO_GITHUB  "yes" (in wrangler.jsonc) also saves new PDFs and photos to GitHub
 //                           until GitHub Pages is turned off; "no" = R2 only.
 
+import { describeChanges, commitMessage } from "./changes.js";
+
 const R2_FOLDERS = ["/bulletins/", "/newsletters/", "/photos/"];
 const TYPES = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif", heic: "image/heic" };
 const REPO = "RockyHockBaptistChurch/rhbc-website";
@@ -143,8 +145,16 @@ async function staff(request, env, url) {
     });
     const name = staffName(env, user.email, data);
     const added = [...new Set([...list.map((f) => f.path), ...(Array.isArray(uploaded) ? uploaded.filter((u) => cleanPath(u) && inR2(u)) : [])])];
-    const message = "Update website content (saved by " + name + ")" +
-      (added.length ? "\n\nAdded:\n" + added.map((f) => "- " + f).join("\n") : "") + "\n\nSaved-By: " + name;
+    // A plain-English list of what changed, so GitHub's History reads like a change log.
+    let message;
+    try {
+      const before = JSON.parse(await gh(env, "/contents/data/site.json?ref=" + base, { raw: true }));
+      message = commitMessage(name, describeChanges(before, JSON.parse(data)), added);
+    } catch (e) {
+      console.warn("[RHBC] change list failed, using the plain message:", e && e.message);
+      message = "Update website content (saved by " + name + ")" +
+        (added.length ? "\n\nAdded:\n" + added.map((f) => "- " + f).join("\n") : "") + "\n\nSaved-By: " + name;
+    }
     const c = await gh(env, "/git/commits", { method: "POST", body: JSON.stringify({ message, tree: tree.sha, parents: [base] }) });
     try {
       await gh(env, "/git/refs/heads/" + BRANCH, { method: "PATCH", body: JSON.stringify({ sha: c.sha, force: false }) });
