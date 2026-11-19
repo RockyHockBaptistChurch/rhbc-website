@@ -3451,22 +3451,6 @@
    "cat": "worship"
   },
   {
-   "id": "deepdive",
-   "dow": 0,
-   "start": "18:00",
-   "end": "",
-   "title": "Deep Dive",
-   "loc": "Sanctuary",
-   "note": "",
-   "cats": [
-    "bible"
-   ],
-   "auds": [
-    "adults"
-   ],
-   "cat": "bible"
-  },
-  {
    "id": "wmvxceknqwzwr",
    "dow": 0,
    "start": "18:00",
@@ -3495,6 +3479,22 @@
    ],
    "auds": [
     "kids"
+   ],
+   "cat": "bible"
+  },
+  {
+   "id": "deepdive",
+   "dow": 0,
+   "start": "18:00",
+   "end": "",
+   "title": "Deep Dive",
+   "loc": "Sanctuary",
+   "note": "Nursery available.",
+   "cats": [
+    "bible"
+   ],
+   "auds": [
+    "adults"
    ],
    "cat": "bible"
   },
