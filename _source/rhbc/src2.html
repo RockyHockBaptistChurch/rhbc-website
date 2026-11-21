@@ -151,17 +151,6 @@ p{margin:0}
 .cs-addr[hidden]{display:none}
 @media (max-width:640px){.csbar .wrap{grid-template-columns:auto minmax(0,1fr)}.cs-ic{width:34px;height:34px;align-self:start}.cs-tools{grid-column:1/-1;justify-content:flex-start}.cs-addr{grid-column:1/-1}.cs-line b{font-size:1.12rem}}
 body:not([data-page="home"]) .csbar[data-place="home"]{display:none}
-.cs-card{--cs:#1F3A5F;--cs-hi:#E2B04A;margin-top:18px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
-.cs-card .cs-top{background:var(--cs);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 16px}
-.cs-card .cs-top .cs-ic{width:32px;height:32px}
-.cs-card .cs-kind{color:var(--cs-hi)}
-.cs-card .cs-in{padding:14px 16px;display:grid;gap:6px}
-.cs-card .cs-in b{font-family:var(--display);font-weight:400;font-size:1.45rem;line-height:1.2;color:var(--ink)}
-.cs-card .cs-school{color:var(--muted);opacity:1;font-weight:600}
-.cs-card .cs-ask{color:var(--ink);opacity:1}
-.cs-card .cs-tools{justify-content:flex-start;margin-top:4px}
-.cs-card .cs-btn.ghost{color:var(--ink);border-color:var(--line)}
-.cs-card .cs-addr{grid-column:auto;background:var(--wash);color:var(--ink)}
 
 /* closing / delay alert */
 .alert{--al:var(--c-music);background:color-mix(in srgb,var(--al) 13%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--al) 35%,transparent);border-top:6px solid var(--al)}
@@ -1001,7 +990,6 @@ textarea{min-height:84px;resize:vertical}
         <div class="sunday-head"><div><p class="eyebrow">Every Sunday</p><h2 id="sundayHead">Join Us This Week</h2></div><button class="btn ghost small ms-edit" type="button" hidden>Manage Schedule</button></div>
         <ul class="times" id="sundayTimes"></ul>
         <div class="addr-row"><p class="addr"><strong>113 Rocky Hock Church Road</strong><br><strong>Edenton, NC 27932</strong></p><a class="btn ghost small dir-btn" id="dirBtn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Rocky+Hock+Baptist+Church,+113+Rocky+Hock+Church+Road,+Edenton,+NC+27932" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Get Directions</a></div>
-        <div class="cs-card" id="csCard" hidden></div>
       </aside>
     </div>
   </section>
@@ -2475,7 +2463,7 @@ function paintNotice(){
 }
 function renderNotice(){paintAlert();paintNotice();paintCollege()}
 /* College Student of the Week: from the bulletin for the most recent Sunday, shown that Sunday through Saturday */
-var CS_PLACE="all",CS_ADDR=true,CS_TODAY=null; /* CS_PLACE: "all" = banner on every page, "home" = banner on Home only, "card" = card on Home */
+var CS_PLACE="home",CS_ADDR=true,CS_TODAY=null; /* CS_PLACE: "home" = banner on the Home page only (Sam's choice, November 21, 2026), "all" = every page */
 /* for the browser tests and test pages: change the settings above, see the bulletins, open one to edit */
 window.__rhbcCS={set:o=>{if(o.place)CS_PLACE=o.place;if("addr" in o)CS_ADDR=o.addr;if("today" in o)CS_TODAY=o.today;if(o.demo)for(const b of state.bulletins||[])if(o.demo[(b.d||"").slice(0,10)]&&!b.cs)b.cs=o.demo[b.d.slice(0,10)];paintCollege()},
   bulletins:()=>state.bulletins,edit:d=>openDoc("bulletins",(state.bulletins||[]).findIndex(x=>(x.d||"").slice(0,10)===d))};
@@ -2487,7 +2475,7 @@ function curCollege(){
 }
 const CS_ICON='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg>';
 function paintCollege(){
-  const bar=$("csbar"),card=$("csCard");bar.replaceChildren();card.replaceChildren();bar.hidden=card.hidden=true;
+  const bar=$("csbar");bar.replaceChildren();bar.hidden=true;
   const b=curCollege();if(!b)return;const c=b.cs,first=c.name.trim().split(/\s+/)[0];
   const ic=()=>{const s=el("span",{className:"cs-ic"});s.innerHTML=CS_ICON;return s};
   const line=el("span",{className:"cs-line"},el("b",{textContent:c.name.trim()}));if(c.school)line.append(el("span",{className:"cs-school",textContent:" · "+c.school}));
@@ -2502,9 +2490,7 @@ function paintCollege(){
     btn.onclick=()=>{const open=addr.hidden;document.querySelectorAll(".cs-addr").forEach(a=>a.hidden=!open);document.querySelectorAll(".cs-btn[aria-expanded]").forEach(x=>{x.setAttribute("aria-expanded",String(open));x.textContent=open?"Hide Address":"Send a Card"})};
     tools.append(btn)}
   if(canEditFlag){const e=el("button",{type:"button",className:"cs-btn ghost",textContent:"Edit"});e.onclick=()=>openDoc("bulletins",state.bulletins.indexOf(b));tools.append(e)}
-  if(CS_PLACE==="card"){
-    card.append(el("div",{className:"cs-top"},ic(),el("span",{className:"cs-kind",textContent:"College Student of the Week"})),el("div",{className:"cs-in"},line,ask,tools));if(addr)card.lastChild.append(addr);card.hidden=false}
-  else{bar.dataset.place=CS_PLACE;const w=el("div",{className:"wrap"},ic(),el("div",{className:"cs-body"},el("span",{className:"cs-kind",textContent:"College Student of the Week"}),line,ask),tools);if(addr)w.append(addr);bar.append(w);bar.hidden=false}
+  {bar.dataset.place=CS_PLACE;const w=el("div",{className:"wrap"},ic(),el("div",{className:"cs-body"},el("span",{className:"cs-kind",textContent:"College Student of the Week"}),line,ask),tools);if(addr)w.append(addr);bar.append(w);bar.hidden=false}
 }
 const KIND_LABEL={cancel:"Canceled",delay:"Delay / Weather",info:"Schedule Change"};
 const ICONS={cancel:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',delay:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>'};

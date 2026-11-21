@@ -1,4 +1,4 @@
-# College Student of the Week: reading it from bulletin PDFs, which week it shows, and the three placements.
+# College Student of the Week: reading it from bulletin PDFs, which week it shows, and the banner (Home page only; "all" = every page).
 # Needs pdfjs-dist 4.10.38 in tests/pj/node_modules (npm i --prefix pj pdfjs-dist@4.10.38) and a build in ../out.
 import asyncio,os,json,sys
 from playwright.async_api import async_playwright
@@ -65,22 +65,21 @@ async def main():
     r=await pg.evaluate('JSON.stringify(__rhbcCS.bulletins().find(x=>x.d==="2026-11-15").cs||null)')
     check(r=='null','empty name removes student',r);await c.close()
     # 3. placements: desktop, phone and dark
-    for place in ['all','home','card']:
+    for place in ['home','all']:
       for vp,dark in [((1280,900),False),((390,844),False),((390,844),True)]:
         c=await b.new_context(viewport={'width':vp[0],'height':vp[1]},color_scheme='dark' if dark else 'light');await c.route('**/*',h);pg=await c.new_page()
         errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
         await pg.clock.set_fixed_time('2026-11-21T15:00:00-05:00')
         await pg.goto('http://rhbc.test/');await pg.wait_for_timeout(600)
-        await pg.evaluate(f'__rhbcCS.set({{place:"{place}"}})')
-        if place!='card':await pg.click('#csbar .cs-btn')
-        else:await pg.click('#csCard .cs-btn')
+        if place!='home':await pg.evaluate(f'__rhbcCS.set({{place:"{place}"}})')
+        await pg.click('#csbar .cs-btn')
         await pg.wait_for_timeout(150)
         ov=await pg.evaluate('document.documentElement.scrollWidth>innerWidth')
         tag='%s_%d%s'%(place,vp[0],'_dark' if dark else '')
-        if place=='card':await (await pg.query_selector('aside.sunday')).screenshot(path=T+'/shots/cs_'+tag+'.png')
-        else:await pg.screenshot(path=T+'/shots/cs_'+tag+'.png')
+        await pg.screenshot(path=T+'/shots/cs_'+tag+'.png')
+        addr=await pg.evaluate('!document.querySelector("#csbar .cs-addr").hidden')
         await pg.goto('http://rhbc.test/#calendar');await pg.wait_for_timeout(300)
         other=await pg.evaluate('getComputedStyle(document.getElementById("csbar")).display!=="none"&&!document.getElementById("csbar").hidden')
-        check(not ov and not errs and other==(place=='all'),'place',tag,'overflow' if ov else '','on other pages' if other else '',errs);await c.close()
+        check(addr and not ov and not errs and other==(place=='all'),'place',tag,'overflow' if ov else '','on other pages' if other else '',errs);await c.close()
     await b.close();print('FAILURES',bad);sys.exit(1 if bad else 0)
 asyncio.run(main())
