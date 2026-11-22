@@ -130,6 +130,13 @@ p{margin:0}
 .wrow .nrow-head .w-sum{font-weight:600;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink);min-width:0;flex:1 1 220px;overflow-wrap:anywhere}
 .wrow .nrow-tools{flex:none}
 @media (max-width:520px){.wrow .w-fields{grid-template-columns:minmax(0,1fr)}}
+.w-classes{display:grid;gap:10px;margin:6px 0 8px}
+.w-class{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px}
+.w-class .full{grid-column:1/-1}
+.w-class label{display:grid;gap:6px;font-size:.85rem;font-weight:600;grid-template-columns:minmax(0,1fr)}
+.w-class textarea{min-height:60px}
+.w-cls-hint{display:block;color:var(--muted);font-size:.84rem;font-weight:400;margin-top:2px}
+@media (max-width:520px){.w-class{grid-template-columns:minmax(0,1fr)}}
 .nrow .nrow-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .nrow-tools{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
 .nrow .nrow-head{flex-wrap:wrap}
@@ -1467,18 +1474,11 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="students" data-sec="ministries" data-title="Vertical Students" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Vertical Student Ministry</h1><p class="lede">Equipping middle and high school students to answer the upward call of Christ, and to bring their friends and family along.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Vertical Student Ministry</h1><p class="lede">Middle and high school are pivotal years. Vertical Students is a place for teenagers to ask tough questions, build real friendships, and learn what it means to follow Jesus in today’s world.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <p>“Vertical” means growing toward God, with a focus on daily spiritual growth and discipline.</p>
-    <h2>Why a Bald Cypress?</h2>
-    <p>The cypress in our logo pictures the Christian life: roots grounded in Christ and in fellowship, height that keeps growing toward Him, branches that spread the Gospel, and a long life of faithful commitment. A checkmark marks students graduating into their next stage of faith, and a rocket stands for launching into deeper study.</p>
+    <p>“Vertical” means growing toward God. We keep our focus there, so everything else in life can fall into place. Whether you’ve grown up in church or have never opened a Bible, you belong here.</p>
     <h2>When We Meet</h2>
-    <div class="facts">
-      <div class="fact"><b>Sunday School</b><span data-wk="ss" data-fmt="time">9:45 AM</span><small>Youth room, second floor of the Multi-Purpose Building</small></div>
-      <div class="fact"><b>Sunday night</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>Message from Pastor Trey, then small-group breakouts led by our Youth Ministry Team</small></div>
-      <div class="fact"><b>Wednesday night</b><span data-wk="vertical" data-fmt="time" data-suffix=" meal">6:45 PM meal</span><small>Come early for the gym and games, then worship and a message</small></div>
-    </div>
-    <p class="note">Students meet in the Upper Room.</p>
+    <div class="week" data-weekly data-aud="students"></div>
     <div class="linkrow"><a class="btn ghost" href="#special-events">Summer Camp Registration</a></div>
   </div><aside class="side"></aside></div>
 </div>
@@ -2935,7 +2935,8 @@ function renderWeekly(){
     const eb=document.querySelector(".sunday-head .eyebrow");if(eb)eb.textContent=(cx.size||reps.length||lbl)?"This Sunday · "+shortDate(sk).replace(/^\w+, /,""):"Every Sunday"}
   document.querySelectorAll("[data-weekly]").forEach(box=>{
     box.replaceChildren();
-    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d);if(!items.length)continue;
+    const fa=box.dataset.aud,pick=w=>{if(!fa)return w;const c=(w.classes||[]).find(c=>c.aud===fa);if(c)return{...w,loc:c.loc||w.loc,note:c.note,auds:[fa]};return evAuds(w).includes(fa)?w:null};
+    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d).map(pick).filter(Boolean);if(!items.length)continue;
       box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...items.map(wkItem))))}
     if(!box.children.length)box.append(el("p",{className:"empty-note",textContent:"No weekly events are listed right now."}));
   });
@@ -2970,9 +2971,18 @@ function wkRow(w,open){
   const lo=el("input",{id:id+"-l",className:"w-loc",maxLength:80,value:w.loc||""});
   const no=el("textarea",{id:id+"-n",className:"w-note",maxLength:400,placeholder:"Who it’s for, what to bring, meal provided… (optional)"});no.value=w.note||"";
   const L=(txt,inp,cls)=>el("label",{className:cls||""},txt,inp);
+  const clsBox=el("div",{className:"w-classes"});
+  const addCls=c=>{const ws=el("select",{className:"wc-aud"});for(const a in AUDS)if(a!=="all")ws.append(el("option",{value:a,textContent:AUDS[a]}));ws.value=c.aud||"students";
+    const wl=el("input",{className:"wc-loc",maxLength:80,value:c.loc||""});
+    const wn=el("textarea",{className:"wc-note",maxLength:200,placeholder:"For example: Middle & High School Youth (optional)"});wn.value=c.note||"";
+    const rmc=el("button",{type:"button",className:"btn ghost small",textContent:"Remove Class"});
+    const b=el("div",{className:"w-class"},el("label",{},"Who It’s For",ws),el("label",{},"Location",locPicker(wl)),el("label",{className:"full"},"Details",wn),el("div",{className:"full"},rmc));
+    rmc.onclick=()=>b.remove();clsBox.append(b);return b};
+  (w.classes||[]).forEach(addCls);
+  const addC=el("button",{type:"button",className:"btn ghost small",textContent:"+ Add Class"});addC.onclick=()=>addCls({}).querySelector(".wc-aud").focus();
   const upd=()=>{sum.textContent=DAYNAMES[+day.value]+(st.value?" · "+fmtTime(st.value):"")+(ti.value.trim()?" — "+ti.value.trim():"")};
   day.onchange=upd;st.oninput=upd;ti.oninput=upd;upd();
-  const f=el("div",{className:"w-fields full"},L("Name",ti,"full"),L("Day",day),L("Location",locPicker(lo)),el("div",{className:"tp"},L("Starts",st),L("Ends (optional)",en)),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Ministry ",pickHint()),cat),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Who It’s For ",pickHint()),aud),L("Details",no,"full"));
+  const f=el("div",{className:"w-fields full"},L("Name",ti,"full"),L("Day",day),L("Location",locPicker(lo)),el("div",{className:"tp"},L("Starts",st),L("Ends (optional)",en)),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Ministry ",pickHint()),cat),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Who It’s For ",pickHint()),aud),L("Details",no,"full"),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Classes (Optional)",el("small",{className:"w-cls-hint",textContent:"Different details for one group, shown only on that group’s ministry page. For example, the youth room for Students on the Vertical Students page."})),clsBox,el("div",{},addC)));
   row.append(head,f);
   return row;
 }
@@ -2998,7 +3008,9 @@ $("wForm").addEventListener("submit",ev=>{
     if(!/^\d{2}:\d{2}$/.test(start)){show();return err("“"+title+"” needs a start time.")}
     if(end&&end<=start){show();return err("The end time for “"+title+"” needs to be after the start time.")}
     rememberLocation(loc);
-    out.push({id:row.dataset.wid||("w"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),dow,start,end:/^\d{2}:\d{2}$/.test(end)?end:"",title,loc,note,cats,auds,cat:cats[0]||""});
+    const seen=new Set(),classes=[...row.querySelectorAll(".w-class")].map(b=>({aud:b.querySelector(".wc-aud").value,loc:normLoc(b.querySelector(".wc-loc").value.trim()),note:b.querySelector(".wc-note").value.replace(/\r/g,"").trim()})).filter(c=>(c.loc||c.note)&&!seen.has(c.aud)&&seen.add(c.aud));
+    classes.forEach(c=>c.loc&&rememberLocation(c.loc));
+    out.push({id:row.dataset.wid||("w"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),dow,start,end:/^\d{2}:\d{2}$/.test(end)?end:"",title,loc,note,cats,auds,cat:cats[0]||"",...(classes.length?{classes}:{})});
   }
   if(wSingle){if(!out.length)return err("Give it a name and a start time.");state.weekly=sortWk([...state.weekly.filter(w=>w.id!==wSingle.id),...out])}else state.weekly=sortWk(out);
   dirty=true;editing=true;closeDlg();renderAll();
