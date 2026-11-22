@@ -42,7 +42,7 @@ const FIELD = {
   cap: "caption", year: "year", dow: "day", n: "which week", mode: "repeat pattern", skip: "skipped dates",
   moves: "moved dates", u: "link", attach: "attachment", ids: "what's affected", wid: "activity",
 };
-const BULLETIN_FIELD = { a: "PDF", t: "special day", s: "message" };
+const BULLETIN_FIELD = { a: "PDF", t: "special day", s: "message", cs: "college student of the week" };
 const MESSAGE_FIELD = { title: "message title", scr: "Scripture", by: "speaker", series: "series" };
 
 function fieldList(a, b, names, skip = []) {

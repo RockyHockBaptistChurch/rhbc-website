@@ -535,6 +535,22 @@
  ],
  "bulletins": [
   {
+   "d": "2026-11-22",
+   "t": "",
+   "a": "bulletins/2026/20261122 RHBC Bulletin.pdf",
+   "s": {
+    "title": "Like a Gourd Neighbor: What a Withered Vine Can Teach Us about Having Compassion towards Others!",
+    "scr": "Jonah 4:6–11",
+    "by": "Pastor Trey Rogers",
+    "series": "Jonah"
+   },
+   "cs": {
+    "name": "Chloe Chappell",
+    "school": "",
+    "addr": "Ballard West Room 435\n940 College Hill\nGreenville, NC 27858"
+   }
+  },
+  {
    "d": "2026-11-15",
    "t": "",
    "a": "bulletins/2026/20261115 RHBC Bulletin.pdf",
@@ -543,6 +559,11 @@
     "scr": "Jonah 4:1-5",
     "by": "Pastor Trey Rogers",
     "series": "Jonah: A Man Who Went Down, Down, Down, but Found His Way Up & Out by the Grace of God"
+   },
+   "cs": {
+    "name": "Ava Bunch",
+    "school": "North Carolina State University",
+    "addr": "210 Dan Allen Drive\nBragaw 302-B\nRaleigh, NC 27607"
    }
   },
   {
@@ -3451,22 +3472,6 @@
    "cat": "worship"
   },
   {
-   "id": "deepdive",
-   "dow": 0,
-   "start": "18:00",
-   "end": "",
-   "title": "Deep Dive",
-   "loc": "Sanctuary",
-   "note": "",
-   "cats": [
-    "bible"
-   ],
-   "auds": [
-    "adults"
-   ],
-   "cat": "bible"
-  },
-  {
    "id": "wmvxceknqwzwr",
    "dow": 0,
    "start": "18:00",
@@ -3495,6 +3500,22 @@
    ],
    "auds": [
     "kids"
+   ],
+   "cat": "bible"
+  },
+  {
+   "id": "deepdive",
+   "dow": 0,
+   "start": "18:00",
+   "end": "",
+   "title": "Deep Dive",
+   "loc": "Sanctuary",
+   "note": "Nursery Provided",
+   "cats": [
+    "bible"
+   ],
+   "auds": [
+    "adults"
    ],
    "cat": "bible"
   },
