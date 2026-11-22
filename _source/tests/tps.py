@@ -46,36 +46,32 @@ async def main():
       return await route.abort()
     ctx=await b.new_context(viewport={'width':1280,'height':900});await ctx.route('**/*',handler);pg=await ctx.new_page()
     errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
-    await pg.goto('http://rhbc.test/');await pg.wait_for_timeout(900)
+    li='(r)=>[...document.querySelectorAll("[data-route="+r+"] [data-pagesched] li")].map(l=>l.innerText.replace(/\\s+/g," ").trim())'
+    await pg.goto('http://rhbc.test/#kids');await pg.wait_for_timeout(900)
+    print('kids',await pg.evaluate(li,'kids'))
+    print('cards',await pg.evaluate('[...document.querySelectorAll("[data-route=kids] .cards .card")].map(c=>c.innerText.replace(/\\s+/g," "))'))
+    print('sup',await pg.evaluate('[...document.querySelectorAll("[data-route=kids] sup.ord")].length'))
+    await pg.goto('http://rhbc.test/#students');await pg.wait_for_timeout(500)
+    print('students',await pg.evaluate(li,'students'))
     await pg.click('#staffLink');await pg.fill('#gh-key','GOODKEY');await pg.click('#gh-go');await pg.wait_for_timeout(1500)
-    await pg.goto('http://rhbc.test/#students');await pg.wait_for_timeout(600)
-    wk='[...document.querySelectorAll("[data-route=students] [data-weekly] li")].map(l=>l.innerText.replace(/\\s+/g," ").trim())'
-    print('students before',await pg.evaluate(wk))
-    await pg.goto('http://rhbc.test/#schedule');await pg.wait_for_timeout(500)
-    await pg.click('[data-route=schedule] .ms-edit');await pg.wait_for_timeout(300)
-    await pg.click('.ms-row:has-text("Sunday School") button:has-text("Edit")');await pg.wait_for_timeout(300)
-    await pg.click('#wList button:has-text("+ Add Class")');await pg.wait_for_timeout(200)
-    c='#wList .w-class'
-    await pg.select_option(c+' .wc-aud','students')
-    await pg.select_option(c+' .loc-sel','__new');await pg.fill(c+' .wc-loc','Youth Room, Multi-Purpose Building')
-    await pg.fill(c+' .wc-note','Middle & High School Youth')
-    await pg.set_viewport_size({'width':390,'height':844});await pg.wait_for_timeout(200)
-    await pg.evaluate('document.querySelector("#wList .w-class").scrollIntoView({block:"center"})')
-    await pg.screenshot(path='/home/claude/cls-editor-phone.png')
+    await pg.goto('http://rhbc.test/#kids');await pg.wait_for_timeout(700)
+    await pg.set_viewport_size({'width':390,'height':844})
+    await pg.click('[data-route=kids] .ps-edit');await pg.wait_for_timeout(300)
+    await pg.screenshot(path='/home/claude/ps-dialog-1.png')
+    await pg.evaluate('document.querySelectorAll("#psList .ps-row")[1].scrollIntoView({block:"start"})');await pg.wait_for_timeout(150)
+    await pg.screenshot(path='/home/claude/ps-dialog-2.png')
+    # change GAs line to custom wording
+    r='#psList .ps-row:nth-child(4)'
+    await pg.check(r+' input[value=custom]');await pg.fill(r+' .ps-note','1st – 5th Grade Girls and Boys')
+    await pg.click('#psForm button[type=submit]');await pg.wait_for_timeout(400)
+    print('kids after',await pg.evaluate(li,'kids'))
     await pg.set_viewport_size({'width':1280,'height':900})
-    await pg.click('#wForm button[type=submit]');await pg.wait_for_timeout(400);await pg.keyboard.press('Escape');await pg.wait_for_timeout(200)
-    await pg.evaluate('location.hash="#students"');await pg.wait_for_timeout(500)
-    print('students after',await pg.evaluate(wk))
-    await pg.evaluate('location.hash="#home"');await pg.wait_for_timeout(500)
-    print('home sunday',await pg.evaluate('[...document.querySelectorAll("#visitHead ~ * , [aria-labelledby=visitHead] [data-weekly] li")].slice(0,2).map(l=>l.innerText.replace(/\\s+/g," ").trim())'))
     await pg.click('#saveBtn');await pg.wait_for_timeout(2000)
-    saved=None
-    for bd in blobs+[json.loads(base64.b64decode(x['content']).decode()) if False else None for x in []]:
+    for bd in blobs:
       try:
-        d=json.loads(base64.b64decode(bd['content']).decode() if bd.get('encoding')=='base64' else bd['content']);saved=d
-      except Exception: pass
-    ss=[w for w in (saved or {}).get('weekly',[]) if w.get('id')=='ss']
-    print('saved ss',ss)
+        d=json.loads(base64.b64decode(bd['content']).decode() if bd.get('encoding')=='base64' else bd['content'])
+        print('saved kids',[ (x['wid'],x.get('custom',False),x.get('note','')) for x in d['pageSched']['kids']])
+      except Exception as e: pass
     print('errs',errs)
     await b.close()
 asyncio.run(main())

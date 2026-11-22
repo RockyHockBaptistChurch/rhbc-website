@@ -124,13 +124,18 @@ p{margin:0}
 .wrow .nrow-head .w-sum{font-weight:600;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink);min-width:0;flex:1 1 220px;overflow-wrap:anywhere}
 .wrow .nrow-tools{flex:none}
 @media (max-width:520px){.wrow .w-fields{grid-template-columns:minmax(0,1fr)}}
-.w-classes{display:grid;gap:10px;margin:6px 0 8px}
-.w-class{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px;border:1px solid var(--line);border-radius:10px}
-.w-class .full{grid-column:1/-1}
-.w-class label{display:grid;gap:6px;font-size:.85rem;font-weight:600;grid-template-columns:minmax(0,1fr)}
-.w-class textarea{min-height:60px}
-.w-cls-hint{display:block;color:var(--muted);font-size:.84rem;font-weight:400;margin-top:2px}
-@media (max-width:520px){.w-class{grid-template-columns:minmax(0,1fr)}}
+.ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ps-head h2{margin-bottom:0}
+.ps-row{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:10px}
+.ps-row label{display:grid;gap:6px;font-size:.85rem;font-weight:600;grid-template-columns:minmax(0,1fr)}
+.ps-mode{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem}
+.ps-mode label{display:flex;gap:6px;align-items:center;font-weight:600}
+.ps-prev{color:var(--muted);font-size:.84rem;white-space:pre-line}
+.ps-custom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ps-custom .full{grid-column:1/-1}
+.ps-custom textarea{min-height:64px}
+@media (max-width:520px){.ps-custom{grid-template-columns:minmax(0,1fr)}}
+sup.ord{font-size:.62em;line-height:0;vertical-align:super;margin-left:.02em}
 .nrow .nrow-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .nrow-tools{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
 .nrow .nrow-head{flex-wrap:wrap}
@@ -1333,8 +1338,8 @@ textarea{min-height:84px;resize:vertical}
   <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Foundations Kids</h1><p class="lede">We want church to be a place where kids feel safe, loved, and excited to learn about Jesus. In Foundations Kids, we partner with parents to build a lifelong faith on the solid foundation of God’s Word, and have a lot of fun along the way.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <p>Our name, Foundations, comes from Jesus’ story of the wise builder, who built his house on the rock. We want every child’s faith built on that same solid foundation: God’s Word. Whether your family has been in church for years or is just getting started, your kids belong here.</p>
-    <h2>When We Meet</h2>
-    <div class="week" data-weekly data-aud="kids"></div>
+    <div class="ps-head"><h2>When We Meet</h2><button class="btn ghost small ps-edit" type="button" data-page="kids" hidden>Edit When We Meet</button></div>
+    <div class="week" data-pagesched="kids"></div>
     <h2>Nursery</h2>
     <p>Nursery care for babies and toddlers, birth – age 2, during these services:</p>
     <div class="facts">
@@ -1344,11 +1349,11 @@ textarea{min-height:84px;resize:vertical}
     </div>
     <h2>More for Kids</h2>
     <div class="cards">
-      <a class="card" href="#kids-ga"><b>Girls in Action</b><span>Missions for girls, grades 1–5.</span></a>
-      <a class="card" href="#kids-ra"><b>Royal Ambassadors</b><span>Missions for boys, grades 1–5.</span></a>
-      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Preschoolers, ages 3–5.</span></a>
-      <a class="card" href="#kids-bible-drill"><b>Bible Drill</b><span>Learning God’s Word, grades 3–6.</span></a>
-      <a class="card" href="#kids-remind"><b>Remind Text Alerts</b><span>Children’s Ministry updates by text.</span></a>
+      <a class="card" href="#kids-ga"><b>Girls in Action</b><span>Missions for 1st – 5th Grade Girls</span></a>
+      <a class="card" href="#kids-ra"><b>Royal Ambassadors</b><span>Missions for 1st – 5th Grade Boys</span></a>
+      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Missions for Preschoolers, Ages 3 – 5</span></a>
+      <a class="card" href="#kids-bible-drill"><b>Bible Drill</b><span>Learning God’s Word, 3rd – 6th Grade</span></a>
+      <a class="card" href="#kids-remind"><b>Remind Text Alerts</b><span>Children’s Ministry Updates by Text</span></a>
     </div>
   </div><aside class="side"></aside></div>
 </div>
@@ -1463,8 +1468,8 @@ textarea{min-height:84px;resize:vertical}
   <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Vertical Student Ministry</h1><p class="lede">Middle and high school are pivotal years. Vertical Students is a place for teenagers to ask tough questions, build real friendships, and learn what it means to follow Jesus in today’s world.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <p>“Vertical” means growing toward God. We keep our focus there, so everything else in life can fall into place. Whether you’ve grown up in church or have never opened a Bible, you belong here.</p>
-    <h2>When We Meet</h2>
-    <div class="week" data-weekly data-aud="students"></div>
+    <div class="ps-head"><h2>When We Meet</h2><button class="btn ghost small ps-edit" type="button" data-page="students" hidden>Edit When We Meet</button></div>
+    <div class="week" data-pagesched="students"></div>
     <div class="linkrow"><a class="btn ghost" href="#special-events">Summer Camp Registration</a></div>
   </div><aside class="side"></aside></div>
 </div>
@@ -2046,6 +2051,22 @@ textarea{min-height:84px;resize:vertical}
     <h3 id="g-title"></h3>
     <p class="meta" id="g-lead" hidden></p>
     <div id="g-body" style="display:grid;gap:14px;min-width:0"></div>
+  </div>
+</div>
+
+<div id="overlay17" class="overlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg17Title">
+    <h3 id="dlg17Title">Edit When We Meet</h3>
+    <p class="meta">Each line takes its day and time from the weekly schedule, so a time changed in Manage Schedule changes here too. Choose Same as the Schedule to show the schedule’s details, or Custom Details to show different details on this page only.</p>
+    <form id="psForm" novalidate style="display:grid;gap:14px">
+      <div id="psList" class="nlist" style="display:grid;gap:12px"></div>
+      <button class="btn ghost" type="button" id="psAdd" style="justify-self:start">+ Add a Line</button>
+      <p class="err" id="ps-err" hidden></p>
+      <div class="dialog-actions">
+        <button class="btn ghost" type="button" id="psCancel">Cancel</button>
+        <button class="btn primary" type="submit">Apply</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -2729,9 +2750,9 @@ function openEvent(id){
   fcx.set(e?e.cancels:null);fatt.set(e?e.attach:"");syncEvForm();$("delBtn").hidden=!e;$("delBtn").textContent="Delete";$("f-err").hidden=true;
   $("overlay").hidden=false;setTimeout(()=>f.title.focus(),30);
 }
-function closeDlg(){["overlay","overlay2","overlay3","overlay4","overlay5","overlay6","overlay7","overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16"].forEach(i=>$(i).hidden=true);closeChg()}
+function closeDlg(){["overlay","overlay2","overlay3","overlay4","overlay5","overlay6","overlay7","overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16","overlay17"].forEach(i=>$(i).hidden=true);closeChg()}
 $("cancelBtn").onclick=cancelDlg;$("nCancel").onclick=closeDlg;
-[$("overlay"),$("overlay2"),$("overlay3"),$("overlay4"),$("overlay5"),$("overlay6"),$("overlay7"),$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16")].forEach(o=>o.addEventListener("click",e=>{if(e.target===o){dlgRet=null;closeDlg()}}));
+[$("overlay"),$("overlay2"),$("overlay3"),$("overlay4"),$("overlay5"),$("overlay6"),$("overlay7"),$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16"),$("overlay17")].forEach(o=>o.addEventListener("click",e=>{if(e.target===o){dlgRet=null;closeDlg()}}));
 $("evForm").addEventListener("submit",ev=>{
   ev.preventDefault();
   const t=f.title.value.trim(),d=f.date.value,err=m=>{$("f-err").textContent=m;$("f-err").hidden=false};
@@ -2905,8 +2926,7 @@ function renderWeekly(){
     const eb=document.querySelector(".sunday-head .eyebrow");if(eb)eb.textContent=(cx.size||reps.length||lbl)?"This Sunday · "+shortDate(sk).replace(/^\w+, /,""):"Every Sunday"}
   document.querySelectorAll("[data-weekly]").forEach(box=>{
     box.replaceChildren();
-    const fa=box.dataset.aud,pick=w=>{if(!fa)return[w];const cs=(w.classes||[]).filter(c=>c.aud===fa);if(cs.length)return cs.map(c=>({...w,title:c.name||w.title,loc:c.loc||"",note:c.note,auds:[fa]}));return evAuds(w).includes(fa)?[w]:[]};
-    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d).flatMap(pick);if(!items.length)continue;
+        for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d);if(!items.length)continue;
       box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...items.map(wkItem))))}
     if(!box.children.length)box.append(el("p",{className:"empty-note",textContent:"No weekly events are listed right now."}));
   });
@@ -2915,6 +2935,7 @@ function renderWeekly(){
     box.append(el("div",{className:"day"},el("h3",{textContent:"Monthly Events"}),el("ul",{},...ms.slice().sort((a,b)=>(a.mode===b.mode?0:a.mode==="nth"?-1:1)||(a.mode==="day"?(+a.day)-(+b.day):((+a.n===-1?6:+a.n)-(+b.n===-1?6:+b.n))||((+a.dow)-(+b.dow)))||(a.start||"").localeCompare(b.start||"")).map(m=>
       el("li",{},el("time",{textContent:m.start?fmtTime(m.start):""}),el("span",{},el("span",{className:"wk-title",textContent:m.title}),el("small",{className:"wk-loc",textContent:moRule(m)}),wkLoc(m),wkAuds(m),m.note?el("small",{className:"wk-note keep-lines",textContent:m.note}):null))))));
   });
+  renderPageSched();
   const byId=Object.fromEntries(wk.map(w=>[w.id,w]));
   document.querySelectorAll("[data-wk]").forEach(n=>{const w=byId[n.dataset.wk];if(!w)return;const f=n.dataset.fmt,D=DAYNAMES[w.dow];
     const t=f==="day"?D+", "+fmtTime(w.start):f==="days"?D+"s, "+fmtTime(w.start):f==="daysrange"?D+"s, "+fmtSpan(w):fmtTime(w.start);
@@ -2941,19 +2962,9 @@ function wkRow(w,open){
   const lo=el("input",{id:id+"-l",className:"w-loc",maxLength:80,value:w.loc||""});
   const no=el("textarea",{id:id+"-n",className:"w-note",maxLength:400,placeholder:"Who it’s for, what to bring, meal provided… (optional)"});no.value=w.note||"";
   const L=(txt,inp,cls)=>el("label",{className:cls||""},txt,inp);
-  const clsBox=el("div",{className:"w-classes"});
-  const addCls=c=>{const ws=el("select",{className:"wc-aud"});for(const a in AUDS)if(a!=="all")ws.append(el("option",{value:a,textContent:AUDS[a]}));ws.value=c.aud||"students";
-    const wt=el("input",{className:"wc-name",maxLength:90,value:c.name||"",placeholder:"Same as the activity"});
-    const wl=el("input",{className:"wc-loc",maxLength:80,value:c.loc||""});
-    const wn=el("textarea",{className:"wc-note",maxLength:200,placeholder:"For example: Middle & High School Youth (optional)"});wn.value=c.note||"";
-    const rmc=el("button",{type:"button",className:"btn ghost small",textContent:"Remove Class"});
-    const b=el("div",{className:"w-class"},el("label",{className:"full"},"Name (Optional)",wt),el("label",{},"Who It’s For",ws),el("label",{},"Location",locPicker(wl)),el("label",{className:"full"},"Details",wn),el("div",{className:"full"},rmc));
-    rmc.onclick=()=>b.remove();clsBox.append(b);return b};
-  (w.classes||[]).forEach(addCls);
-  const addC=el("button",{type:"button",className:"btn ghost small",textContent:"+ Add Class"});addC.onclick=()=>addCls({}).querySelector(".wc-aud").focus();
   const upd=()=>{sum.textContent=DAYNAMES[+day.value]+(st.value?" · "+fmtTime(st.value):"")+(ti.value.trim()?" — "+ti.value.trim():"")};
   day.onchange=upd;st.oninput=upd;ti.oninput=upd;upd();
-  const f=el("div",{className:"w-fields full"},L("Name",ti,"full"),L("Day",day),L("Location",locPicker(lo)),el("div",{className:"tp"},L("Starts",st),L("Ends (optional)",en)),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Ministry ",pickHint()),cat),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Who It’s For ",pickHint()),aud),L("Details",no,"full"),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Classes (Optional)",el("small",{className:"w-cls-hint",textContent:"Different details for one group, shown only on that group’s ministry page. For example, the youth room for Students on the Vertical Students page."})),clsBox,el("div",{},addC)));
+  const f=el("div",{className:"w-fields full"},L("Name",ti,"full"),L("Day",day),L("Location",locPicker(lo)),el("div",{className:"tp"},L("Starts",st),L("Ends (optional)",en)),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Ministry ",pickHint()),cat),el("div",{className:"full cat-pick"},el("span",{className:"cat-lab"},"Who It’s For ",pickHint()),aud),L("Details",no,"full"));
   row.append(head,f);
   return row;
 }
@@ -2979,9 +2990,7 @@ $("wForm").addEventListener("submit",ev=>{
     if(!/^\d{2}:\d{2}$/.test(start)){show();return err("“"+title+"” needs a start time.")}
     if(end&&end<=start){show();return err("The end time for “"+title+"” needs to be after the start time.")}
     rememberLocation(loc);
-    const classes=[...row.querySelectorAll(".w-class")].map(b=>{const n=b.querySelector(".wc-name").value.trim();return{aud:b.querySelector(".wc-aud").value,...(n?{name:n}:{}),loc:normLoc(b.querySelector(".wc-loc").value.trim()),note:b.querySelector(".wc-note").value.replace(/\r/g,"").trim()}}).filter(c=>c.name||c.loc||c.note);
-    classes.forEach(c=>c.loc&&rememberLocation(c.loc));
-    out.push({id:row.dataset.wid||("w"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),dow,start,end:/^\d{2}:\d{2}$/.test(end)?end:"",title,loc,note,cats,auds,cat:cats[0]||"",...(classes.length?{classes}:{})});
+    out.push({id:row.dataset.wid||("w"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),dow,start,end:/^\d{2}:\d{2}$/.test(end)?end:"",title,loc,note,cats,auds,cat:cats[0]||""});
   }
   if(wSingle){if(!out.length)return err("Give it a name and a start time.");state.weekly=sortWk([...state.weekly.filter(w=>w.id!==wSingle.id),...out])}else state.weekly=sortWk(out);
   dirty=true;editing=true;closeDlg();renderAll();
@@ -3165,6 +3174,44 @@ function openChangeOne(id,ret){const c=id?(state.schedChanges||[]).find(x=>x.id=
 function removeSc(id){const c=(state.schedChanges||[]).find(x=>x.id===id);state.schedChanges=(state.schedChanges||[]).filter(x=>x.id!==id);
   published("Regular activities are back on"+(c?" "+shortDate(c.date):"")+".");savedDlg()}
 $("overlay5").querySelector(".dialog").classList.remove("single");
+
+/* superscript number endings (1st, 2nd, 3rd, 4th) in visible text */
+(function(){const RX=/(\d)(st|nd|rd|th)\b/g,SKIP=/^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|TITLE|SUP|CODE|PRE)$/;
+function fix(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{for(let p=n.parentNode;p&&p!==document;p=p.parentNode){if(p.nodeType===1&&(SKIP.test(p.tagName)||p.isContentEditable||p.classList.contains("no-sup")))return NodeFilter.FILTER_REJECT}RX.lastIndex=0;return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+  const list=[];while(w.nextNode())list.push(w.currentNode);
+  for(const n of list){const t=n.nodeValue,f=document.createDocumentFragment();let i=0;RX.lastIndex=0;let m;while((m=RX.exec(t))){f.append(t.slice(i,m.index+1));const s=document.createElement("sup");s.className="ord";s.textContent=m[2];f.append(s);i=m.index+m[0].length}f.append(t.slice(i));n.replaceWith(f)}}
+let q=false;const run=()=>{q=false;obs.disconnect();try{fix(document.body)}catch(e){}obs.observe(document.body,{childList:true,subtree:true,characterData:true})};
+const obs=new MutationObserver(()=>{if(!q){q=true;requestAnimationFrame(run)}});
+if(document.body)run();else document.addEventListener("DOMContentLoaded",run);})();
+/* When We Meet on ministry pages: lines linked to weekly activities (day and time always from the schedule) */
+const PS_PAGES={kids:"Foundations Kids",students:"Vertical Students"};let psPage=null,psId=0;
+function psRows(pg){return((state.pageSched||{})[pg])||[]}
+function psItem(r){const w=(state.weekly||[]).find(x=>x.id===r.wid);if(!w)return null;return r.custom?{...w,title:r.name||w.title,loc:r.loc||"",note:r.note||"",auds:r.aud?[r.aud]:[]}:w}
+function renderPageSched(){document.querySelectorAll("[data-pagesched]").forEach(box=>{const rows=psRows(box.dataset.pagesched),items=rows.map(psItem).filter(Boolean);box.replaceChildren();
+  for(let d=0;d<7;d++){const its=items.filter(w=>w.dow===d).sort((a,b)=>(a.start||"").localeCompare(b.start||""));if(!its.length)continue;box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...its.map(wkItem))))}
+  if(!items.length)box.append(el("p",{className:"empty-note",textContent:"Meeting times will be listed here soon."}));
+  if(canEditFlag&&items.length<rows.length)box.append(el("p",{className:"err",textContent:"Staff Only: a line here is linked to an activity that was removed from the weekly schedule. Use Edit When We Meet to fix it."}))})}
+function psRow(r){const row=el("div",{className:"ps-row"});const L=(t,i,c)=>el("label",{className:c||""},t,i);
+  const act=el("select",{className:"ps-wid"});act.append(el("option",{value:"",textContent:"Choose an activity…"}));sortWk([...(state.weekly||[])]).forEach(w=>act.append(el("option",{value:w.id,textContent:DAYNAMES[w.dow]+" · "+fmtTime(w.start)+" · "+w.title})));act.value=r.wid||"";
+  const rn="psm"+(++psId),r1=el("input",{type:"radio",name:rn,value:"same"}),r2=el("input",{type:"radio",name:rn,value:"custom"});(r.custom?r2:r1).checked=true;
+  const nm=el("input",{className:"ps-name",maxLength:90,value:r.name||""}),au=el("select",{className:"ps-aud"});au.append(el("option",{value:"",textContent:"(Not Shown)"}));for(const a in AUDS)au.append(el("option",{value:a,textContent:AUDS[a]}));au.value=r.aud||"";
+  const lo=el("input",{className:"ps-loc",maxLength:80,value:r.loc||""}),no=el("textarea",{className:"ps-note",maxLength:300});no.value=r.note||"";
+  const cf=el("div",{className:"ps-custom"},L("Name",nm,"full"),L("Who It’s For",au),L("Location",locPicker(lo)),L("Details",no,"full"));
+  const prev=el("small",{className:"ps-prev"});const wOf=()=>(state.weekly||[]).find(x=>x.id===act.value);
+  const sync=()=>{const w=wOf();cf.style.display=r2.checked?"":"none";prev.style.display=r1.checked&&w?"":"none";
+    if(w)prev.textContent="Shows: "+[w.title,w.loc,evAuds(w).map(a=>"For "+AUDS[a]).join(", "),w.note].filter(Boolean).join(" · ");nm.placeholder=w?w.title:""};
+  r2.onchange=()=>{const w=wOf();if(w&&!nm.value&&!lo.value&&!no.value){nm.value=w.title;lo.value=w.loc||"";if(lo._syncLoc)lo._syncLoc();no.value=w.note||"";au.value=evAuds(w)[0]||""}sync()};r1.onchange=sync;act.onchange=sync;
+  row.append(L("Schedule Activity (Sets the Day and Time)",act),el("div",{className:"ps-mode",role:"group"},el("label",{},r1,"Same as the Schedule"),el("label",{},r2,"Custom Details for This Page")),prev,cf,el("div",{},gBtn("Remove Line","ghost small",()=>row.remove())));sync();return row}
+function openPS(pg){closeDlg();psPage=pg;$("dlg17Title").textContent="Edit When We Meet · "+PS_PAGES[pg];const rows=psRows(pg);$("psList").replaceChildren(...(rows.length?rows:[{}]).map(psRow));$("ps-err").hidden=true;$("overlay17").hidden=false;$("overlay17").querySelector(".dialog").scrollTop=0}
+document.querySelectorAll(".ps-edit").forEach(b=>b.onclick=()=>openPS(b.dataset.page));
+$("psAdd").onclick=()=>{const r=psRow({});$("psList").append(r);r.scrollIntoView({block:"nearest"});r.querySelector(".ps-wid").focus()};
+$("psCancel").onclick=closeDlg;
+$("psForm").addEventListener("submit",ev=>{ev.preventDefault();const err=m=>{$("ps-err").textContent=m;$("ps-err").hidden=false};const out=[];
+  for(const row of $("psList").querySelectorAll(".ps-row")){const wid=row.querySelector(".ps-wid").value,custom=row.querySelector('input[value="custom"]').checked;
+    const name=row.querySelector(".ps-name").value.trim(),loc=normLoc(row.querySelector(".ps-loc").value.trim()),note=row.querySelector(".ps-note").value.replace(/\r/g,"").trim(),aud=row.querySelector(".ps-aud").value;
+    if(!wid){if(custom&&(name||loc||note))return err("Each line needs a schedule activity, which sets its day and time.");continue}
+    if(custom){if(loc)rememberLocation(loc);out.push({wid,custom:true,name,aud,loc,note})}else out.push({wid})}
+  state.pageSched={...(state.pageSched||{}),[psPage]:out};published("When We Meet updated on "+PS_PAGES[psPage]+".")});
 
 /* Manage Schedule */
 function manage(tab){msTab=tab||msTab;dlgRet=null;const re={fn:()=>manage(msTab),save:true};
@@ -4090,7 +4137,7 @@ renderAll();show();
     if(!window.claude||!claude.use)return;
     art=await claude.use("artifact");if(!art)return;
     const u=await claude.use("user");
-    if(u&&await u.canEdit()){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add").forEach(b=>b.hidden=false);canEditFlag=true;document.querySelectorAll(".ls-edit").forEach(b=>b.hidden=false);renderNotice();renderPhotos()}
+    if(u&&await u.canEdit()){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add,.ps-edit").forEach(b=>b.hidden=false);canEditFlag=true;document.querySelectorAll(".ls-edit").forEach(b=>b.hidden=false);renderNotice();renderPhotos()}
     try{assetsApi=await claude.use("assets")}catch(e){assetsApi=null}
   }catch(e){}
 })();

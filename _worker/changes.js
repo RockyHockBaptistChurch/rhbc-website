@@ -40,7 +40,7 @@ const FIELD = {
   text: "text", reg: "registration link", links: "links", name: "name", role: "role", phone: "phone",
   email: "email", bio: "bio", ini: "initials", photo: "photo", img: "photo", a: "file", t: "title",
   cap: "caption", year: "year", dow: "day", n: "which week", mode: "repeat pattern", skip: "skipped dates",
-  moves: "moved dates", classes: "classes", u: "link", attach: "attachment", ids: "what's affected", wid: "activity",
+  moves: "moved dates", u: "link", attach: "attachment", ids: "what's affected", wid: "activity",
 };
 const BULLETIN_FIELD = { a: "PDF", t: "special day", s: "message" };
 const MESSAGE_FIELD = { title: "message title", scr: "Scripture", by: "speaker", series: "series" };
@@ -193,9 +193,13 @@ export function describeChanges(oldData, newData) {
   }
   if (!same(A.locations, B.locations)) out.push("Changed the list of saved locations");
   if (!same(A.bulletinSkip, B.bulletinSkip)) out.push("Changed bulletin events not to suggest");
+  const PS = { kids: "Foundations Kids", students: "Vertical Students" };
+  for (const k of new Set([...Object.keys(A.pageSched || {}), ...Object.keys(B.pageSched || {})])) {
+    if (!same((A.pageSched || {})[k], (B.pageSched || {})[k])) out.push("Changed When We Meet on the " + (PS[k] || k) + " page");
+  }
 
   const known = ["alert", "notices", "events", "weekly", "monthly", "schedChanges", "overrides", "specials", "bulletins",
-    "newsletters", "staff", "careers", "photos", "live", "svcNotes", "locations", "bulletinSkip"];
+    "newsletters", "staff", "careers", "photos", "live", "svcNotes", "locations", "bulletinSkip", "pageSched"];
   for (const k of new Set([...Object.keys(A), ...Object.keys(B)])) {
     if (!known.includes(k) && !same(A[k], B[k])) out.push("Changed " + k);
   }

@@ -96,7 +96,7 @@ src = src.replace('(function(){let p=null;try{p=sessionStorage.getItem(PENDING)}
 a = src.index('(async()=>{\n  try{\n    if(!window.claude||!claude.use)return;')
 b = src.index('})();\n', a) + len('})();\n')
 init_js = r'''/* staff sign-in: Cloudflare Access email sign-in on the Worker and church domain; GitHub key on github.io */
-if(GH.ok){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add,.ls-edit").forEach(b=>b.hidden=false);canEditFlag=true;assetsApi=GH.assets;renderNotice();renderPhotos();renderAll();}
+if(GH.ok){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add,.ls-edit,.ps-edit").forEach(b=>b.hidden=false);canEditFlag=true;assetsApi=GH.assets;renderNotice();renderPhotos();renderAll();}
 $("staffLink").textContent=GH.ok?"Staff Sign Out":"Staff Sign In";
 $("staffLink").onclick=e=>{e.preventDefault();
   if(GH.ok){if(dirty&&!confirm("You have unsaved changes. Sign Out anyway?"))return;if(GH.mode==="cf"){dirty=false;GH.signOut();return}GH.forget();location.reload();return}
@@ -115,8 +115,8 @@ $("ghForm").addEventListener("submit",async ev=>{ev.preventDefault();
 if(GH.notice)setTimeout(()=>toast(GH.notice),400);
 '''
 src = src[:a] + init_js + src[b:]
-rep('"overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16"]', '"overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16","overlay10"]')
-rep('$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16")].forEach(', '$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16"),$("overlay10")].forEach(')
+rep('"overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16","overlay17"]', '"overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16","overlay17","overlay10"]')
+rep('$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16"),$("overlay17")].forEach(', '$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16"),$("overlay17"),$("overlay10")].forEach(')
 
 # sign-in dialog + footer link
 dlg = '''<div id="overlay10" class="overlay" hidden>
