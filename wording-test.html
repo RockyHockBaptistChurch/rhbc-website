@@ -138,26 +138,6 @@ p{margin:0}
 @media (max-width:480px){.nrow{grid-template-columns:1fr}}
 .notice a{color:var(--on-brand);font-weight:600}
 
-/* college student of the week */
-.csbar{--cs:#1F3A5F;--cs-hi:#E2B04A;background:var(--cs);color:#fff}
-.csbar .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px 16px;padding-block:12px}
-.cs-ic{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--cs-hi);color:var(--cs)}
-.cs-body{display:grid;gap:2px;min-width:0}
-.cs-kind{font:700 .72rem/1.2 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--cs-hi)}
-.cs-line{font-size:1.02rem;overflow-wrap:anywhere}
-.cs-line b{font-family:var(--display);font-weight:400;font-size:1.25rem;letter-spacing:.01em}
-.cs-school{opacity:.85}
-.cs-ask{font-size:.9rem;opacity:.88}
-.cs-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
-.cs-btn{font:600 .85rem/1 var(--body);padding:9px 14px;border-radius:999px;border:1px solid var(--cs-hi);background:var(--cs-hi);color:var(--cs);cursor:pointer;white-space:nowrap}
-.cs-btn.ghost{background:transparent;color:#fff;border-color:color-mix(in srgb,#fff 55%,transparent)}
-.cs-btn:hover{filter:brightness(1.08)}
-.cs-addr{grid-column:2/-1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;background:color-mix(in srgb,#fff 10%,transparent);border-radius:8px;padding:10px 14px}
-.cs-addr address{font-style:normal;white-space:pre-line;line-height:1.45}
-.cs-addr[hidden]{display:none}
-@media (max-width:640px){.csbar .wrap{grid-template-columns:auto minmax(0,1fr)}.cs-ic{width:34px;height:34px;align-self:start}.cs-tools{grid-column:1/-1;justify-content:flex-start}.cs-addr{grid-column:1/-1}.cs-line b{font-size:1.12rem}}
-body:not([data-page="home"]) .csbar[data-place="home"]{display:none}
-
 /* closing / delay alert */
 .alert{--al:var(--c-music);background:color-mix(in srgb,var(--al) 13%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--al) 35%,transparent);border-top:6px solid var(--al)}
 .alert[data-kind="delay"]{--al:var(--gold)}
@@ -979,7 +959,6 @@ textarea{min-height:84px;resize:vertical}
 <section class="alert" id="alert" hidden aria-live="polite"></section>
 <a class="livebar" id="livebar" href="#worship" hidden><span class="ldot" aria-hidden="true"></span><b>LIVE NOW</b><span class="lt" id="liveText">Sunday worship is streaming</span><span class="lgo">Watch on our website →</span></a>
 <div class="notice" id="notice" hidden></div>
-<section class="csbar" id="csbar" hidden aria-label="College Student of the Week"></section>
 
 <main>
 <!-- ============ HOME ============ -->
@@ -2165,13 +2144,6 @@ textarea{min-height:84px;resize:vertical}
         <label>Preacher or Speaker<input id="d-s-by" maxlength="80" placeholder="Pastor Trey Rogers"></label>
         <label>Sermon Series <span class="hint">Optional</span><input id="d-s-series" maxlength="200"></label>
       </fieldset>
-      <fieldset class="full serm-box" id="d-cs">
-        <legend>College Student of the Week <span class="hint">shown on the website from this Sunday until the next</span></legend>
-        <p class="hint" id="d-cs-hint">Filled in from the PDF when you upload it. Leave the name empty if this bulletin doesn’t list one.</p>
-        <label>Student’s Name<input id="d-cs-name" maxlength="80"></label>
-        <label>School <span class="hint">Optional</span><input id="d-cs-school" maxlength="80" placeholder="East Carolina University"></label>
-        <label>Mailing Address <span class="hint">Optional</span><textarea id="d-cs-addr" rows="3" maxlength="300"></textarea></label>
-      </fieldset>
       <p class="err full" id="d-err" hidden></p>
       <div class="dialog-actions full">
         <button class="btn danger" type="button" id="d-del">Remove</button>
@@ -2304,7 +2276,7 @@ const ROUTES=new Set(views.map(v=>v.dataset.route));
 function show(){
   let r=(location.hash||"").slice(1)||"home";
   if(!ROUTES.has(r))r="home";
-  let cur=null;document.body.dataset.page=r;
+  let cur=null;
   for(const v of views){const on=v.dataset.route===r;v.hidden=!on;if(on)cur=v}
   const sec=cur.dataset.sec||(r==="calendar"?"calendar":r==="home"?"home":"");
   document.querySelectorAll(".nav [data-sec]").forEach(n=>{const s=n.getAttribute("data-sec")===sec;(n.tagName==="DETAILS"?n.querySelector("summary"):n).classList.toggle("cur",s)});
@@ -2486,37 +2458,7 @@ function paintNotice(){
     box.append(el("div",{className:"nb-row"},wrap));
   });
 }
-function renderNotice(){paintAlert();paintNotice();paintCollege()}
-/* College Student of the Week: from the bulletin for the most recent Sunday, shown that Sunday through Saturday */
-var CS_PLACE="home",CS_ADDR=true,CS_TODAY=null; /* CS_PLACE: "home" = banner on the Home page only (Sam's choice, November 21, 2026), "all" = every page */
-/* for the browser tests and test pages: change the settings above, see the bulletins, open one to edit */
-window.__rhbcCS={set:o=>{if(o.place)CS_PLACE=o.place;if("addr" in o)CS_ADDR=o.addr;if("today" in o)CS_TODAY=o.today;if(o.demo)for(const b of state.bulletins||[])if(o.demo[(b.d||"").slice(0,10)]&&!b.cs)b.cs=o.demo[b.d.slice(0,10)];paintCollege()},
-  bulletins:()=>state.bulletins,edit:d=>openDoc("bulletins",(state.bulletins||[]).findIndex(x=>(x.d||"").slice(0,10)===d))};
-function curCollege(){
-  const t=CS_TODAY||nyKey();let best=null;
-  for(const b of state.bulletins||[]){const d=(b.d||"").slice(0,10);if(d&&d<=t&&(!best||d>best.d.slice(0,10)))best=b}
-  if(!best||!best.cs||!(best.cs.name||"").trim())return null;
-  const end=fromKey(best.d.slice(0,10));end.setDate(end.getDate()+7);return keyOf(end)>t?best:null;
-}
-const CS_ICON='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/><path d="M22 10v6"/></svg>';
-function paintCollege(){
-  const bar=$("csbar");bar.replaceChildren();bar.hidden=true;
-  const b=curCollege();if(!b)return;const c=b.cs,first=c.name.trim().split(/\s+/)[0];
-  const ic=()=>{const s=el("span",{className:"cs-ic"});s.innerHTML=CS_ICON;return s};
-  const line=el("span",{className:"cs-line"},el("b",{textContent:c.name.trim()}));if(c.school)line.append(el("span",{className:"cs-school",textContent:" · "+c.school}));
-  const ask=el("span",{className:"cs-ask",textContent:"Please pray for "+first+" this week"+(CS_ADDR&&c.addr?" and send a card of encouragement.":".")});
-  const tools=el("div",{className:"cs-tools"});let addr=null;
-  if(CS_ADDR&&c.addr){
-    const full=c.name.trim()+"\n"+c.addr.trim();
-    const cp=el("button",{type:"button",className:"cs-btn ghost",textContent:"Copy Address"});
-    cp.onclick=async()=>{try{await navigator.clipboard.writeText(full);cp.textContent="Copied"}catch(e){cp.textContent="Select and Copy Above"}setTimeout(()=>cp.textContent="Copy Address",2500)};
-    addr=el("div",{className:"cs-addr",hidden:true},el("address",{textContent:full}),cp);
-    const btn=el("button",{type:"button",className:"cs-btn",textContent:"Send a Card"});btn.setAttribute("aria-expanded","false");
-    btn.onclick=()=>{const open=addr.hidden;document.querySelectorAll(".cs-addr").forEach(a=>a.hidden=!open);document.querySelectorAll(".cs-btn[aria-expanded]").forEach(x=>{x.setAttribute("aria-expanded",String(open));x.textContent=open?"Hide Address":"Send a Card"})};
-    tools.append(btn)}
-  if(canEditFlag){const e=el("button",{type:"button",className:"cs-btn ghost",textContent:"Edit"});e.onclick=()=>openDoc("bulletins",state.bulletins.indexOf(b));tools.append(e)}
-  {bar.dataset.place=CS_PLACE;const w=el("div",{className:"wrap"},ic(),el("div",{className:"cs-body"},el("span",{className:"cs-kind",textContent:"College Student of the Week"}),line,ask),tools);if(addr)w.append(addr);bar.append(w);bar.hidden=false}
-}
+function renderNotice(){paintAlert();paintNotice()}
 const KIND_LABEL={cancel:"Canceled",delay:"Delay / Weather",info:"Schedule Change"};
 const ICONS={cancel:'<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',delay:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>'};
 function alertActive(a){if(!a||!a.title)return false;if(!a.until)return true;const end=a.until.length>10?new Date(a.until):new Date(a.until+"T23:59:59");return !(end<new Date())}
@@ -2873,8 +2815,6 @@ function openDoc(kind,i){
   $("d-serm").hidden=!isB;const sm=(it&&it.s)||{};sermAuto=false;
   $("d-s-title").value=sm.title||"";$("d-s-scr").value=sm.scr||"";$("d-s-by").value=sm.by||"";$("d-s-series").value=sm.series||"";
   $("d-s-hint").textContent="Filled in from the PDF when you upload it. Check it, or type it in.";
-  $("d-cs").hidden=!isB;const cs=(it&&it.cs)||{};csAuto=false;$("d-cs-name").value=cs.name||"";$("d-cs-school").value=cs.school||"";$("d-cs-addr").value=cs.addr||"";
-  $("d-cs-hint").textContent="Filled in from the PDF when you upload it. Leave the name empty if this bulletin doesn’t list one.";
   $("d-read").hidden=!(it&&(it.a||it.u));$("d-read").disabled=false;$("d-read").textContent="Read From PDF";
   $("overlay3").hidden=false;
 }
@@ -2909,9 +2849,7 @@ $("dForm").addEventListener("submit",async ev=>{
     else{if(!safeUrl(u))return err("Paste the full link to the PDF, starting with https://");rec.u=u}
   }
   if(isB){const sm={title:$("d-s-title").value.trim(),scr:$("d-s-scr").value.trim(),by:cleanBy($("d-s-by").value),series:$("d-s-series").value.trim()};
-    if(sm.title||sm.scr||sm.by)rec.s=sm;
-    const cs={name:$("d-cs-name").value.replace(/\s+/g," ").trim(),school:$("d-cs-school").value.replace(/\s+/g," ").trim(),addr:$("d-cs-addr").value.split("\n").map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean).join("\n")};
-    if(cs.name)rec.cs=cs}
+    if(sm.title||sm.scr||sm.by)rec.s=sm}
   const list=state[docKind]||(state[docKind]=[]);
   if(docIdx>=0)list.splice(docIdx,1);
   list.push(rec);list.sort((x,y)=>(y.d||"").localeCompare(x.d||""));
@@ -3809,67 +3747,12 @@ function parseSpecial(L){
 }
 let pdfjsP=null,sermAuto=false,dayAuto=false;
 const PDFJS="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/legacy/build/";
-var csAuto=false;
-async function pdfRead(file){
+async function pdfLines(file){
   if(!pdfjsP)pdfjsP=import(PDFJS+"pdf.min.mjs").then(m=>{m.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.mjs";return m});
   const pdfjs=await pdfjsP;const doc=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer()),verbosity:0}).promise;
-  const out=[],pages=[];for(let p=1;p<=Math.min(doc.numPages,3);p++){const tc=await (await doc.getPage(p)).getTextContent();pages.push(tc.items);if(p>2)continue;let cur="";
+  const out=[];for(let p=1;p<=Math.min(doc.numPages,2);p++){const tc=await (await doc.getPage(p)).getTextContent();let cur="";
     for(const it of tc.items){cur+=it.str;if(it.hasEOL){out.push(cur);cur=""}}if(cur)out.push(cur)}
-  return {lines:out,pages};
-}
-async function pdfLines(file){return (await pdfRead(file)).lines}
-/* College Student of the Week: find the heading on a page and read the centered lines under it */
-function parseCollege(pages){
-  for(const items of pages){
-    const its=items.filter(t=>t.str&&t.str.trim()).map(t=>({s:t.str,x:t.transform[4],y:t.transform[5],w:t.width,h:t.height||t.transform[3]||10}));
-    /* group into lines by y */
-    const lines=[];for(const t of its.sort((a,b)=>b.y-a.y||a.x-b.x)){let L=lines.find(l=>Math.abs(l.y-t.y)<2.5);if(!L){L={y:t.y,h:t.h,parts:[]};lines.push(L)}L.parts.push(t)}
-    lines.sort((a,b)=>b.y-a.y);
-    for(const L of lines){
-      /* the heading's pieces sit together on one line; join them and look for the words */
-      L.parts.sort((a,b)=>a.x-b.x);
-      const s=L.parts.map(p=>p.s).join("");const hm=s.match(/college\s*student\s*of\s*the\s*week\s*(:?)/i);if(!hm)continue;
-      const m=hm.index,end=m+hm[0].length;
-      /* find the parts covering the heading; text after it on the same line is the name only after a colon */
-      let pos=0,x0=null,x1=null;const after=[];
-      for(const p of L.parts){const a=pos,b=pos+p.s.length;if(b>m&&a<end){if(x0===null)x0=p.x;x1=p.x+p.w;if(b>end)after.push({...p,s:p.s.slice(end-a)})}else if(a>=end&&x1!==null&&p.x-x1<60)after.push(p);pos=b}
-      const rest=joinParts(after);
-      if(rest&&!hm[1])continue; /* "College Student of the Week in the bulletin…" is a sentence, not the heading */
-      const cx=(x0+x1)/2,half=Math.max(150,(x1-x0)/2+60);
-      const out=rest?[rest]:[];let lastY=L.y;
-      for(const N of lines){if(N.y>=L.y-1)continue;
-        const near=N.parts.filter(p=>{const c=p.x+p.w/2;return Math.abs(c-cx)<half&&p.x>x0-110&&p.x+p.w<x1+110});
-        if(!near.length)continue;
-        if(lastY-N.y>Math.max(N.h,L.h)*2.1)break;
-        const txt=joinParts(near);
-        /* stop at a new heading (ends with a colon) or a column of unrelated text */
-        if(/:$/.test(txt)&&out.length)break;
-        out.push(txt);lastY=N.y;if(/\b[A-Z]{2}\s*\d{5}(-\d{4})?\s*$/.test(txt)||out.length>=6)break}
-      return collegeFrom(out)}
-  }
-  return null;
-}
-/* join pieces of one line, adding a space where there's a visible gap */
-function joinParts(ps){let o="",prev=null;for(const p of ps){if(prev&&!/\s$/.test(o)&&!/^\s/.test(p.s)&&p.x-(prev.x+prev.w)>p.h*0.18)o+=" ";o+=p.s;prev=p}return o.replace(/\s+/g," ").trim()}
-function collegeFrom(lines){
-  lines=lines.map(l=>l.replace(/\s*-\s*/g,"-").replace(/\s+,/g,",").replace(/\s+/g," ").trim()).filter(Boolean);
-  if(!lines.length)return null;
-  let name="",school="";const addr=[];
-  for(const l of lines){
-    const sOnly=l.match(/^\((?:attending\s+)?([^)]+)\)$/i);if(sOnly&&!school){school=sOnly[1].trim();continue}
-    if(!name){const m=l.match(/^(.*?)\s*\((?:attending\s+)?([^)]+)\)\s*$/i);if(m){name=m[1].trim();school=m[2].trim()}else name=l;continue}
-    addr.push(l)}
-  if(!name||/^_+$|name\s*_/i.test(name)||!/[A-Za-z]{2}/.test(name))return null;
-  if(/^\d/.test(name))return null; /* an address, not a name */
-  return {name,school,addr:addr.join("\n")};
-}
-function fillCollege(r,force,hasText){
-  const ids=["d-cs-name","d-cs-school","d-cs-addr"],h=$("d-cs-hint");
-  if(!force&&!csAuto&&ids.some(i=>$(i).value.trim()))return; /* don't overwrite what someone typed */
-  if(r){$("d-cs-name").value=r.name;$("d-cs-school").value=r.school;$("d-cs-addr").value=r.addr;csAuto=true;
-    h.textContent="Found in the bulletin. Please check it before saving."}
-  else{if(force||csAuto)ids.forEach(i=>$(i).value="");csAuto=true;
-    h.textContent=hasText?"No College Student of the Week is listed in this bulletin, so nothing will show on the website.":"This PDF is saved as a picture, so its words can’t be read. Type the student in if the bulletin lists one."}
+  return out;
 }
 /* match a name from the PDF to one used before ("Graduates Sunday" -> "Graduate Sunday") */
 function normName(x){return (x||"").toLowerCase().replace(/[’'"“”]/g,"").replace(/&/g," and ").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w&&w!=="the").map(w=>w.length>3?w.replace(/s$/,""):w).join(" ").replace(/ (sunday|service|day)$/,"").trim()}
@@ -3880,8 +3763,7 @@ async function fillFromPdf(src,force){
   const ids=["d-s-title","d-s-scr","d-s-by","d-s-series"];
   const keepSerm=!force&&!sermAuto&&ids.some(i=>$(i).value.trim()); /* don't overwrite what someone typed */
   const hint=$("d-s-hint"),th=$("d-title-hint");if(!keepSerm)hint.textContent="Reading the sermon from the PDF…";
-  try{const rd=await pdfRead(src),lines=rd.lines;
-    try{fillCollege(parseCollege(rd.pages),force,lines.join("").trim())}catch(e){$("d-cs-hint").textContent="The college student couldn’t be read from this PDF. Type it in if the bulletin lists one."}
+  try{const lines=await pdfLines(src);
     if(force||dayAuto||!$("d-title").value.trim()){const x=(parseSpecial(lines)||"").replace(/[“”"]/g,"").replace(/\s+/g," ").trim();
       if(force&&!x)th.textContent="No special day was found in the PDF.";
       if(x||!force){const m=matchName(x);$("d-title").value=m||x;dayAuto=true;$("d-title")._sync();
