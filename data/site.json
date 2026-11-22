@@ -3813,7 +3813,7 @@
     "custom": true,
     "name": "Sunday School",
     "aud": "kids",
-    "loc": "",
+    "loc": "Multi-Purpose Building",
     "note": "Classes for All Ages"
    },
    {
@@ -3821,8 +3821,8 @@
     "custom": true,
     "name": "Children’s Church",
     "aud": "kids",
-    "loc": "",
-    "note": "Age 3 – 5th Grade\nDismissed during worship.\nPick-up from Children's Church after service."
+    "loc": "Multi-Purpose Building",
+    "note": "Ages 3 – 5th Grade\nDismissed during worship.\nPick-up from Children's Church after service."
    },
    {
     "wid": "wmvxceknqecrq"
