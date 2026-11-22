@@ -1341,26 +1341,21 @@ textarea{min-height:84px;resize:vertical}
 <div class="view" data-route="kids" data-sec="ministries" data-title="Foundations Kids" hidden>
   <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Foundations Kids</h1><p class="lede">We want church to be a place where kids feel safe, loved, and excited to learn about Jesus. In Foundations Kids, we partner with parents to build a lifelong faith on the solid foundation of God’s Word, and have a lot of fun along the way.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <blockquote>Everyone who hears these words of Mine and acts on them may be compared to a wise man who built his house on the rock.<cite>Matthew 7:24</cite></blockquote>
-    <p>Our name comes from the parable of the wise and foolish builders. In the Foundations logo, the evergreen stands for growth, its roots reach down to the Rock, and three upward arrows represent the Father, Son and Holy Spirit.</p>
-    <h2>Sunday Mornings</h2>
+    <p>Our name, Foundations, comes from Jesus’ story of the wise builder, who built his house on the rock. We want every child’s faith built on that same solid foundation: God’s Word. Whether your family has been in church for years or is just getting started, your kids belong here.</p>
+    <h2>When We Meet</h2>
+    <div class="week" data-weekly data-aud="kids"></div>
+    <h2>Nursery</h2>
+    <p>Nursery care for babies and toddlers, birth – age 2, during these services:</p>
     <div class="facts">
-      <div class="fact"><b>Sunday School</b><span data-wk="ss" data-fmt="time">9:45 AM</span><small>A class for each age or grade</small></div>
-      <div class="fact"><b>Nursery</b><span>Birth – toddler</span><small>During Sunday School and worship</small></div>
-      <div class="fact"><b>Children’s Church</b><span data-wk="worship" data-fmt="time">11:00 AM</span><small>Ages 3–4 in Room 411; K–3 in Rooms 417/418</small></div>
-    </div>
-    <p>Children are dismissed from the worship service to Children’s Church and picked up in their classrooms afterward.</p>
-    <h2>Evenings</h2>
-    <div class="facts">
-      <div class="fact"><b>Sunday</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>Deep Dive children’s ministry, Multi-Purpose Building</small></div>
-      <div class="fact"><b>GAs & RAs</b><span>Wednesday</span><small>Girls in Action and Royal Ambassadors, grades 1–5</small></div>
-      <div class="fact"><b>Mission Friends</b><span>Wednesday</span><small>Ages 3–4, Room 406</small></div>
+      <div class="fact"><b>Sunday Morning</b><span data-wk="worship" data-fmt="time">11:00 AM</span><small>During Morning Worship</small></div>
+      <div class="fact"><b>Sunday Evening</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>During Deep Dive</small></div>
+      <div class="fact"><b>Wednesday Evening</b><span data-wk="seeds" data-fmt="time">7:00 PM</span><small>During Worship Seeds</small></div>
     </div>
     <h2>More for Kids</h2>
     <div class="cards">
       <a class="card" href="#kids-ga"><b>Girls in Action</b><span>Missions for girls, grades 1–5.</span></a>
       <a class="card" href="#kids-ra"><b>Royal Ambassadors</b><span>Missions for boys, grades 1–5.</span></a>
-      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Preschoolers, ages 3–4.</span></a>
+      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Preschoolers, ages 3–5.</span></a>
       <a class="card" href="#kids-bible-drill"><b>Bible Drill</b><span>Learning God’s Word, grades 3–6.</span></a>
       <a class="card" href="#kids-remind"><b>Remind Text Alerts</b><span>Children’s Ministry updates by text.</span></a>
     </div>
@@ -2935,8 +2930,8 @@ function renderWeekly(){
     const eb=document.querySelector(".sunday-head .eyebrow");if(eb)eb.textContent=(cx.size||reps.length||lbl)?"This Sunday · "+shortDate(sk).replace(/^\w+, /,""):"Every Sunday"}
   document.querySelectorAll("[data-weekly]").forEach(box=>{
     box.replaceChildren();
-    const fa=box.dataset.aud,pick=w=>{if(!fa)return w;const c=(w.classes||[]).find(c=>c.aud===fa);if(c)return{...w,loc:c.loc||w.loc,note:c.note,auds:[fa]};return evAuds(w).includes(fa)?w:null};
-    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d).map(pick).filter(Boolean);if(!items.length)continue;
+    const fa=box.dataset.aud,pick=w=>{if(!fa)return[w];const cs=(w.classes||[]).filter(c=>c.aud===fa);if(cs.length)return cs.map(c=>({...w,title:c.name||w.title,loc:c.loc||"",note:c.note,auds:[fa]}));return evAuds(w).includes(fa)?[w]:[]};
+    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d).flatMap(pick);if(!items.length)continue;
       box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...items.map(wkItem))))}
     if(!box.children.length)box.append(el("p",{className:"empty-note",textContent:"No weekly events are listed right now."}));
   });
@@ -2973,10 +2968,11 @@ function wkRow(w,open){
   const L=(txt,inp,cls)=>el("label",{className:cls||""},txt,inp);
   const clsBox=el("div",{className:"w-classes"});
   const addCls=c=>{const ws=el("select",{className:"wc-aud"});for(const a in AUDS)if(a!=="all")ws.append(el("option",{value:a,textContent:AUDS[a]}));ws.value=c.aud||"students";
+    const wt=el("input",{className:"wc-name",maxLength:90,value:c.name||"",placeholder:"Same as the activity"});
     const wl=el("input",{className:"wc-loc",maxLength:80,value:c.loc||""});
     const wn=el("textarea",{className:"wc-note",maxLength:200,placeholder:"For example: Middle & High School Youth (optional)"});wn.value=c.note||"";
     const rmc=el("button",{type:"button",className:"btn ghost small",textContent:"Remove Class"});
-    const b=el("div",{className:"w-class"},el("label",{},"Who It’s For",ws),el("label",{},"Location",locPicker(wl)),el("label",{className:"full"},"Details",wn),el("div",{className:"full"},rmc));
+    const b=el("div",{className:"w-class"},el("label",{className:"full"},"Name (Optional)",wt),el("label",{},"Who It’s For",ws),el("label",{},"Location",locPicker(wl)),el("label",{className:"full"},"Details",wn),el("div",{className:"full"},rmc));
     rmc.onclick=()=>b.remove();clsBox.append(b);return b};
   (w.classes||[]).forEach(addCls);
   const addC=el("button",{type:"button",className:"btn ghost small",textContent:"+ Add Class"});addC.onclick=()=>addCls({}).querySelector(".wc-aud").focus();
@@ -3008,7 +3004,7 @@ $("wForm").addEventListener("submit",ev=>{
     if(!/^\d{2}:\d{2}$/.test(start)){show();return err("“"+title+"” needs a start time.")}
     if(end&&end<=start){show();return err("The end time for “"+title+"” needs to be after the start time.")}
     rememberLocation(loc);
-    const seen=new Set(),classes=[...row.querySelectorAll(".w-class")].map(b=>({aud:b.querySelector(".wc-aud").value,loc:normLoc(b.querySelector(".wc-loc").value.trim()),note:b.querySelector(".wc-note").value.replace(/\r/g,"").trim()})).filter(c=>(c.loc||c.note)&&!seen.has(c.aud)&&seen.add(c.aud));
+    const classes=[...row.querySelectorAll(".w-class")].map(b=>{const n=b.querySelector(".wc-name").value.trim();return{aud:b.querySelector(".wc-aud").value,...(n?{name:n}:{}),loc:normLoc(b.querySelector(".wc-loc").value.trim()),note:b.querySelector(".wc-note").value.replace(/\r/g,"").trim()}}).filter(c=>c.name||c.loc||c.note);
     classes.forEach(c=>c.loc&&rememberLocation(c.loc));
     out.push({id:row.dataset.wid||("w"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),dow,start,end:/^\d{2}:\d{2}$/.test(end)?end:"",title,loc,note,cats,auds,cat:cats[0]||"",...(classes.length?{classes}:{})});
   }

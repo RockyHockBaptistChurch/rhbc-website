@@ -3443,7 +3443,19 @@
    "auds": [
     "all"
    ],
-   "cat": "bible"
+   "cat": "bible",
+   "classes": [
+    {
+     "aud": "students",
+     "loc": "Youth Room, Multi-Purpose Building",
+     "note": "Middle & High School Youth"
+    },
+    {
+     "aud": "kids",
+     "loc": "",
+     "note": "Classes for All Ages"
+    }
+   ]
   },
   {
    "id": "worship",
@@ -3459,7 +3471,15 @@
    "auds": [
     "all"
    ],
-   "cat": "worship"
+   "cat": "worship",
+   "classes": [
+    {
+     "aud": "kids",
+     "name": "Children’s Church",
+     "loc": "",
+     "note": "Age 3 – 5th Grade\nDismissed during worship; pick up in classrooms afterward"
+    }
+   ]
   },
   {
    "id": "wmvxceknqwzwr",
