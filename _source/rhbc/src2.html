@@ -124,6 +124,18 @@ p{margin:0}
 .wrow .nrow-head .w-sum{font-weight:600;font-size:.95rem;letter-spacing:0;text-transform:none;color:var(--ink);min-width:0;flex:1 1 220px;overflow-wrap:anywhere}
 .wrow .nrow-tools{flex:none}
 @media (max-width:520px){.wrow .w-fields{grid-template-columns:minmax(0,1fr)}}
+.ps-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.ps-head h2{margin-bottom:0}
+.ps-row{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:10px}
+.ps-row label{display:grid;gap:6px;font-size:.85rem;font-weight:600;grid-template-columns:minmax(0,1fr)}
+.ps-mode{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem}
+.ps-mode label{display:flex;gap:6px;align-items:center;font-weight:600}
+.ps-prev{color:var(--muted);font-size:.84rem;white-space:pre-line}
+.ps-custom{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ps-custom .full{grid-column:1/-1}
+.ps-custom textarea{min-height:64px}
+@media (max-width:520px){.ps-custom{grid-template-columns:minmax(0,1fr)}}
+sup.ord{font-size:.62em;line-height:0;vertical-align:super;margin-left:.02em}
 .nrow .nrow-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .nrow-tools{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
 .nrow .nrow-head{flex-wrap:wrap}
@@ -959,7 +971,7 @@ textarea{min-height:84px;resize:vertical}
       <div class="hero-copy">
         <svg class="hero-logo" viewBox="0 0 1544 699" role="img" aria-label="Rocky Hock Baptist Church, Edenton, North Carolina" xmlns="http://www.w3.org/2000/svg"><g font-family="'Open Sans',sans-serif" style="font-stretch:75%"><text x="0" y="207" font-size="273" font-weight="700" class="hl-name">Rocky Hock</text><text x="0" y="511" font-size="273" font-weight="700" class="hl-name">Baptist Church</text><text x="0.0 65.9 142.0 207.9 288.7 353.7 432.7 513.6 602.2 683.0 762.0 833.8 898.8 1013.9 1083.9 1155.8 1227.6 1306.6 1370.2 1421.9 1502.8" y="696" font-size="84" font-weight="600" class="hl-sub">EDENTON,NORTHCAROLINA</text></g></svg>
         <h1>Come grow in <em>God’s Word.</em></h1>
-        <p class="lede">A church family nine miles north of Edenton, gathering since 1835. Our mission is to magnify Christ and make disciples of all people, and there’s a seat for you this Sunday.</p>
+        <p class="lede">We’re a welcoming church family just north of Edenton, faithfully worshiping together since 1835. Whether you’re exploring Christianity for the first time or looking for a place to call home, there’s a seat saved for you this Sunday.</p>
         <div class="hero-actions">
           <a class="btn primary" href="#welcome">Plan Your Visit</a>
           <a class="btn ghost" href="#calendar">See What’s Coming Up</a>
@@ -976,7 +988,7 @@ textarea{min-height:84px;resize:vertical}
   <section class="band" aria-labelledby="nextHead">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">On the calendar</p><h2 id="nextHead">Coming up at RHBC</h2></div>
+        <div><p class="eyebrow">On the calendar</p><h2 id="nextHead">Coming Up at RHBC</h2></div>
         <a class="btn ghost" href="#calendar">Full Calendar</a>
       </div>
       <div class="nextup" id="nextUp"></div>
@@ -986,7 +998,7 @@ textarea{min-height:84px;resize:vertical}
   <section class="band wash" aria-labelledby="visitHead">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Weekly schedule</p><h2 id="visitHead">Plan Your Visit</h2><p class="lede">Come as you are. A greeter will meet you at the door, and there’s a nursery for little ones on Sundays and Wednesdays.</p></div>
+        <div><p class="eyebrow">Weekly schedule</p><h2 id="visitHead">Plan Your Visit</h2><p class="lede">Come as you are. A greeter or usher will meet you at the door to help you find your way around. If you have any questions—from finding the nursery for your little ones to locating the sanctuary—just ask. We want you to feel at home.</p></div>
         <div class="linkrow"><button class="btn ghost ms-edit" type="button" hidden>Manage Schedule</button><a class="btn ghost" href="#schedule">Full Schedule</a><a class="btn ghost" href="#directions">Directions</a></div>
       </div>
       <div class="week" data-weekly></div>
@@ -995,7 +1007,7 @@ textarea{min-height:84px;resize:vertical}
 
   <section class="band" aria-labelledby="minHead">
     <div class="wrap">
-      <div class="sec-head"><div><p class="eyebrow">Get connected</p><h2 id="minHead">A place for every age</h2></div><a class="btn ghost" href="#ministries">All Ministries</a></div>
+      <div class="sec-head"><div><p class="eyebrow">Get connected</p><h2 id="minHead">A Place for Every Age</h2></div><a class="btn ghost" href="#ministries">All Ministries</a></div>
       <div class="mins">
         <article class="min"><h3>Foundations Kids</h3><p>Sunday School, Children’s Church, and GAs, RAs and Mission Friends on Wednesdays.</p><a href="#kids">Foundations Kids →</a></article>
         <article class="min"><h3>Vertical Students</h3><p>Middle and high schoolers meet Sunday and Wednesday evenings to grow toward God together.</p><a href="#students">Vertical Students →</a></article>
@@ -1062,7 +1074,7 @@ textarea{min-height:84px;resize:vertical}
 
 <!-- ============ ABOUT ============ -->
 <div class="view" data-route="about" data-sec="about" data-title="About Us" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>About Rocky Hock Baptist</h1><p class="lede">A Southern Baptist congregation that wants to be vibrant and intentional about following Jesus Christ.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>About Rocky Hock Baptist</h1><p class="lede">A Southern Baptist church family striving to follow Jesus Christ with intentional faith, and helping others do the same.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <p>Rocky Hock Baptist Church cooperates with the Southern Baptist Convention nationally and the Baptist State Convention of North Carolina, and partners with like-minded churches in the Chowan Baptist Association.</p>
     <div class="cards">
@@ -1077,27 +1089,27 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="welcome" data-sec="about" data-title="Welcome" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Welcome</h1><p class="lede">We’re glad you’re thinking about visiting, and we hope to see you soon.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Welcome</h1><p class="lede">We’re so glad you’re here.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <p>God has called us to go and make disciples who live deeper in Christ. Whether you’ve been in church all your life or you’re just curious, you’re welcome here.</p>
+    <p>Whether you’ve been in church your whole life or you’re just curious about faith, you’re welcome here. God has called us to make disciples who live deeper in Christ, and we’d love for you to be part of that journey.</p>
     <h2>Your First Sunday</h2>
     <div class="facts">
       <div class="fact"><b>Sunday School</b><span data-wk="ss" data-fmt="time">9:45 AM</span><small>Classes for every age</small></div>
       <div class="fact"><b>Worship</b><span data-wk="worship" data-fmt="time">11:00 AM</span><small>Children’s Church for age 2 – 5th grade</small></div>
       <div class="fact"><b>Nursery</b><span>Sundays & Wednesdays</span><small>Birth through toddler</small></div>
     </div>
-    <p>A greeter or usher will meet you when you arrive and help you find your way. Have a question? Just ask; we’re happy to help.</p>
-    <h2>Let Us Know You Visited</h2>
-    <p>Fill out a Connection Card from the back of any pew or the welcome desk. Hand it to a volunteer or the pastor, or drop it in the offering plate. You can also fill one out online.</p>
+    <p>Come as you are. A greeter or usher will meet you at the door to help you find your way around. If you have any questions—from finding the nursery for your little ones to locating the sanctuary—just ask. We want you to feel at home.</p>
+    <h2>We’d Love to Connect</h2>
+    <p>Thank you for visiting! Please fill out a Connection Card located on the back of any pew or at our welcome desk. You can hand it to our pastor, pass it to a volunteer, or simply drop it in the offering plate. Prefer to connect digitally? Use the Online Connection Card button below.</p>
     <div class="linkrow"><a class="btn primary" href="https://rhbce.sharefaithconnect.com/external/form/3c34d032-a6b2-4118-8ce7-8dfbeb736ad6" target="_blank" rel="noopener">Online Connection Card</a><a class="btn ghost" href="#directions">Get Directions</a></div>
   </div><aside class="side"></aside></div>
 </div>
 
 <div class="view" data-route="beliefs" data-sec="about" data-title="Our Beliefs" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Beliefs</h1><p class="lede">What we hold to be true, with the Scripture behind each conviction.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Beliefs</h1><p class="lede">What we hold to be true, and the Scripture behind each conviction.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <p class="bel-intro">We believe…</p>
-    <p class="note" style="margin-top:-8px">Hover over or tap a verse to read it. Scripture quotations are from the King James Version.</p>
+    <p class="note" style="margin-top:-8px">Explore the foundation of our faith below. Hover over or tap any verse to read it.</p>
     <div class="bel-groups">
       <section class="bel-group"><h2>The Scriptures</h2><ul>
         <li><span>The Bible is the inspired Word of God, without error and complete.</span><div class="refs"><button type="button" class="bref" data-ref="2 Timothy 3:16" aria-haspopup="dialog" aria-expanded="false">2 Timothy 3:16</button><button type="button" class="bref" data-ref="Revelation 22:18–19" aria-haspopup="dialog" aria-expanded="false">Revelation 22:18–19</button></div></li>
@@ -1130,7 +1142,7 @@ textarea{min-height:84px;resize:vertical}
 <div class="view" data-route="mission" data-sec="about" data-title="Our Mission" hidden>
   <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Mission</h1></div></section>
   <div class="wrap pbody"><div class="prose">
-    <p class="mission">The mission of Rocky Hock Baptist Church is to magnify Christ and make disciples <span>of all people.</span></p>
+    <p class="mission">Our mission is simple but profound: to magnify Christ and make disciples <span>of all people.</span></p>
     <blockquote>Therefore everyone who hears these words of Mine and acts on them, may be compared to a wise man who built his house on the rock.<cite>Matthew 7:24</cite></blockquote>
     <div class="linkrow"><a class="btn ghost" href="#beliefs">Our Beliefs</a><a class="btn ghost" href="#ministries">Find Your Ministry</a></div>
   </div><aside class="side"></aside></div>
@@ -1273,7 +1285,7 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="staff" data-sec="about" data-title="Our Staff" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Staff</h1><div class="linkrow"><button class="btn ghost edit-toggle" type="button" data-label="Edit Staff" hidden>Edit Staff</button></div></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Staff</h1><p class="lede">Take a moment to meet our staff below. They are here to serve you, pray with you, and help you grow in your walk with Christ. Please don’t hesitate to reach out to any of them if you need prayer, guidance, or support.</p><div class="linkrow"><button class="btn ghost edit-toggle" type="button" data-label="Edit Staff" hidden>Edit Staff</button></div></div></section>
   <div class="wrap pbody"><div class="prose">
     <div class="editor-tools"><button class="btn primary" type="button" id="addStaff">+ Add Staff Member</button></div>
     <div id="staffList" style="display:grid;gap:18px"></div>
@@ -1282,7 +1294,7 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="schedule" data-sec="about" data-title="Our Schedule" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Schedule</h1><p class="lede">A nursery is provided for Sunday and Wednesday services.</p><div class="linkrow"><button class="btn ghost ms-edit" type="button" hidden>Manage Schedule</button></div></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">About Us</p><h1>Our Schedule</h1><p class="lede">Church is more than just a Sunday morning service—it’s a community doing life together. From our main Sunday worship to our midweek Bible studies, youth groups, and senior adult gatherings, there are multiple opportunities to connect throughout the week. Find the times that work best for you and your family below.</p><div class="linkrow"><button class="btn ghost ms-edit" type="button" hidden>Manage Schedule</button></div></div></section>
   <div class="wrap pbody"><div class="prose">
     <div class="week" data-weekly></div>
     <div class="week" data-monthly hidden></div>
@@ -1309,7 +1321,7 @@ textarea{min-height:84px;resize:vertical}
 
 <!-- ============ MINISTRIES ============ -->
 <div class="view" data-route="ministries" data-sec="ministries" data-title="Our Ministries" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>A place for every age</h1><p class="lede">Ministry drives everything we do. Every member, of every age, is invited to live out their faith by sharing the Gospel and helping people where they are.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>A Place for Every Age</h1><p class="lede">Ministry drives everything we do. Every member, of every age, is invited to live out their faith by sharing the Gospel and helping people where they are.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <div class="cards">
       <a class="card" href="#kids"><b>Foundations Kids</b><span>Nursery through 5th grade.</span></a>
@@ -1323,30 +1335,25 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="kids" data-sec="ministries" data-title="Foundations Kids" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Foundations Kids</h1><p class="lede">A place where children learn the basics of the faith on a rock-solid foundation in Christ’s teaching.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Foundations Kids</h1><p class="lede">We want church to be a place where kids feel safe, loved, and excited to learn about Jesus. In Foundations Kids, we partner with parents to build a lifelong faith on the solid foundation of God’s Word, and have a lot of fun along the way.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <blockquote>Everyone who hears these words of Mine and acts on them may be compared to a wise man who built his house on the rock.<cite>Matthew 7:24</cite></blockquote>
-    <p>Our name comes from the parable of the wise and foolish builders. In the Foundations logo, the evergreen stands for growth, its roots reach down to the Rock, and three upward arrows represent the Father, Son and Holy Spirit.</p>
-    <h2>Sunday mornings</h2>
+    <p>Our name, Foundations, comes from Jesus’ story of the wise builder, who built his house on the rock. We want every child’s faith built on that same solid foundation: God’s Word. Whether your family has been in church for years or is just getting started, your kids belong here.</p>
+    <div class="ps-head"><h2>When We Meet</h2><button class="btn ghost small ps-edit" type="button" data-page="kids" hidden>Edit When We Meet</button></div>
+    <div class="week" data-pagesched="kids"></div>
+    <h2>Nursery</h2>
+    <p>Nursery is available for Birth – Age 2 during these services:</p>
     <div class="facts">
-      <div class="fact"><b>Sunday School</b><span data-wk="ss" data-fmt="time">9:45 AM</span><small>A class for each age or grade</small></div>
-      <div class="fact"><b>Nursery</b><span>Birth – toddler</span><small>During Sunday School and worship</small></div>
-      <div class="fact"><b>Children’s Church</b><span data-wk="worship" data-fmt="time">11:00 AM</span><small>Ages 3–4 in Room 411; K–3 in Rooms 417/418</small></div>
-    </div>
-    <p>Children are dismissed from the worship service to Children’s Church and picked up in their classrooms afterward.</p>
-    <h2>Evenings</h2>
-    <div class="facts">
-      <div class="fact"><b>Sunday</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>Deep Dive children’s ministry, Multi-Purpose Building</small></div>
-      <div class="fact"><b>GAs & RAs</b><span>Wednesday</span><small>Girls in Action and Royal Ambassadors, grades 1–5</small></div>
-      <div class="fact"><b>Mission Friends</b><span>Wednesday</span><small>Ages 3–4, Room 406</small></div>
+      <div class="fact"><b>Sunday Morning</b><span data-wk="worship" data-fmt="time">11:00 AM</span><small>During Morning Worship</small></div>
+      <div class="fact"><b>Sunday Evening</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>During Deep Dive</small></div>
+      <div class="fact"><b>Wednesday Evening</b><span data-wk="seeds" data-fmt="time">7:00 PM</span><small>During Worship Seeds</small></div>
     </div>
     <h2>More for Kids</h2>
     <div class="cards">
-      <a class="card" href="#kids-ga"><b>Girls in Action</b><span>Missions for girls, grades 1–5.</span></a>
-      <a class="card" href="#kids-ra"><b>Royal Ambassadors</b><span>Missions for boys, grades 1–5.</span></a>
-      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Preschoolers, ages 3–4.</span></a>
-      <a class="card" href="#kids-bible-drill"><b>Bible Drill</b><span>Learning God’s Word, grades 3–6.</span></a>
-      <a class="card" href="#kids-remind"><b>Remind Text Alerts</b><span>Children’s Ministry updates by text.</span></a>
+      <a class="card" href="#kids-ga"><b>Girls in Action</b><span>Missions for 1st – 5th Grade Girls</span></a>
+      <a class="card" href="#kids-ra"><b>Royal Ambassadors</b><span>Missions for 1st – 5th Grade Boys</span></a>
+      <a class="card" href="#kids-mf"><b>Mission Friends</b><span>Missions for Preschoolers, Ages 3 – 5</span></a>
+      <a class="card" href="#kids-bible-drill"><b>Bible Drill</b><span>Learning God’s Word, 3rd – 6th Grade</span></a>
+      <a class="card" href="#kids-remind"><b>Remind Text Alerts</b><span>Children’s Ministry Updates by Text</span></a>
     </div>
   </div><aside class="side"></aside></div>
 </div>
@@ -1458,18 +1465,11 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="students" data-sec="ministries" data-title="Vertical Students" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Vertical Student Ministry</h1><p class="lede">Equipping middle and high school students to answer the upward call of Christ, and to bring their friends and family along.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Vertical Student Ministry</h1><p class="lede">Middle and high school are pivotal years. Vertical Students is a place for teenagers to ask tough questions, build real friendships, and learn what it means to follow Jesus in today’s world.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <p>“Vertical” means growing toward God, with a focus on daily spiritual growth and discipline.</p>
-    <h2>Why a bald cypress?</h2>
-    <p>The cypress in our logo pictures the Christian life: roots grounded in Christ and in fellowship, height that keeps growing toward Him, branches that spread the Gospel, and a long life of faithful commitment. A checkmark marks students graduating into their next stage of faith, and a rocket stands for launching into deeper study.</p>
-    <h2>When we meet</h2>
-    <div class="facts">
-      <div class="fact"><b>Sunday School</b><span data-wk="ss" data-fmt="time">9:45 AM</span><small>Youth room, second floor of the Multi-Purpose Building</small></div>
-      <div class="fact"><b>Sunday night</b><span data-wk="deepdive" data-fmt="time">6:00 PM</span><small>Message from Pastor Trey, then small-group breakouts led by our Youth Ministry Team</small></div>
-      <div class="fact"><b>Wednesday night</b><span data-wk="vertical" data-fmt="time" data-suffix=" meal">6:45 PM meal</span><small>Come early for the gym and games, then worship and a message</small></div>
-    </div>
-    <p class="note">Students meet in the Upper Room.</p>
+    <p>“Vertical” means growing toward God. We keep our focus there, so everything else in life can fall into place. Whether you’ve grown up in church or have never opened a Bible, you belong here.</p>
+    <div class="ps-head"><h2>When We Meet</h2><button class="btn ghost small ps-edit" type="button" data-page="students" hidden>Edit When We Meet</button></div>
+    <div class="week" data-pagesched="students"></div>
     <div class="linkrow"><a class="btn ghost" href="#special-events">Summer Camp Registration</a></div>
   </div><aside class="side"></aside></div>
 </div>
@@ -1516,13 +1516,13 @@ textarea{min-height:84px;resize:vertical}
       <div class="fact"><b>When</b><span data-wk="yah" data-fmt="days">Tuesdays, 10:00 AM</span></div>
       <div class="fact"><b>Where</b><span>Room 312</span><small>Senior Adult Building</small></div>
     </div>
-    <h2>Through the year</h2>
+    <h2>Through the Year</h2>
     <ul>
       <li>Senior Day in May, when seniors lead part of Sunday morning worship</li>
       <li>Valentine’s Banquet and luncheons</li>
       <li>Trips such as Myrtle Beach, Lancaster, the Outer Banks Music Showcase, a mountain retreat and the yearly Williamsburg shopping trip</li>
     </ul>
-    <h2>Caring for homebound members</h2>
+    <h2>Caring for Homebound Members</h2>
     <p>Homebound seniors receive DVDs of Sunday services and special services, and meals are delivered when the church serves meals at events.</p>
   </div><aside class="side"></aside></div>
 </div>
@@ -1531,7 +1531,7 @@ textarea{min-height:84px;resize:vertical}
   <section class="phero"><div class="wrap"><p class="eyebrow">Our ministries</p><h1>Creative Ministry</h1><p class="lede">Worshiping God through the arts, and discovering the talents He has given each of us.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <p>Our goal is to share the Gospel of Jesus Christ with people who may not yet have heard of salvation and grace through His death and resurrection.</p>
-    <h2>Ways to take part</h2>
+    <h2>Ways to Take Part</h2>
     <ul><li>Drama and acting</li><li>Signing and interpretive movement</li><li>Puppets and dowel rods</li><li>Art and blacklight productions</li></ul>
     <h2>Productions</h2>
     <p>Each year we present a community dinner theater that teaches life lessons from the Bible. Our children and youth have also led an entire worship service in blacklight, with puppets, signing, painting, dowel rods and fabric effects.</p>
@@ -1568,7 +1568,7 @@ textarea{min-height:84px;resize:vertical}
       <div class="fact"><b>Where</b><span>Special Function Room</span><small>Multi-Purpose Building</small></div>
       <div class="fact"><b>Who</b><span>Any man who wants to take part</span></div>
     </div>
-    <h2>What we do</h2>
+    <h2>What We Do</h2>
     <ul>
       <li>Local community outreach projects</li>
       <li>Support for our RAs</li>
@@ -1593,7 +1593,7 @@ textarea{min-height:84px;resize:vertical}
 </div>
 
 <div class="view" data-route="prayer-shawl" data-sec="missions" data-title="Prayer Shawl" hidden>
-  <section class="phero"><div class="wrap"><p class="eyebrow">Our missions</p><h1>Prayer Shawl ministry</h1><p class="lede">Every stitch is prayed over, so the person who receives it can feel the warmth and love of God.</p></div></section>
+  <section class="phero"><div class="wrap"><p class="eyebrow">Our missions</p><h1>Prayer Shawl Ministry</h1><p class="lede">Every stitch is prayed over, so the person who receives it can feel the warmth and love of God.</p></div></section>
   <div class="wrap pbody"><div class="prose">
     <div class="facts">
       <div class="fact"><b>When</b><span>Fourth Tuesday night</span><small>Every month</small></div>
@@ -1608,7 +1608,7 @@ textarea{min-height:84px;resize:vertical}
 <div class="view" data-route="joy-group" data-sec="missions" data-title="Joy Group" hidden>
   <section class="phero"><div class="wrap"><p class="eyebrow">Our missions</p><h1>Joy Group</h1><p class="lede">Jesus, Others, & You: friendship and the love of Christ for adults of all ages with mental or physical challenges.</p></div></section>
   <div class="wrap pbody"><div class="prose">
-    <h2>Outings and activities</h2>
+    <h2>Outings and Activities</h2>
     <ul>
       <li>The aquarium at Nags Head</li>
       <li>Christian plays in Washington, NC</li>
@@ -2051,6 +2051,22 @@ textarea{min-height:84px;resize:vertical}
     <h3 id="g-title"></h3>
     <p class="meta" id="g-lead" hidden></p>
     <div id="g-body" style="display:grid;gap:14px;min-width:0"></div>
+  </div>
+</div>
+
+<div id="overlay17" class="overlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg17Title">
+    <h3 id="dlg17Title">Edit When We Meet</h3>
+    <p class="meta">Each line takes its day and time from the weekly schedule, so a time changed in Manage Schedule changes here too. Choose Same as the Schedule to show the schedule’s details, or Custom Details to show different details on this page only.</p>
+    <form id="psForm" novalidate style="display:grid;gap:14px">
+      <div id="psList" class="nlist" style="display:grid;gap:12px"></div>
+      <button class="btn ghost" type="button" id="psAdd" style="justify-self:start">+ Add a Line</button>
+      <p class="err" id="ps-err" hidden></p>
+      <div class="dialog-actions">
+        <button class="btn ghost" type="button" id="psCancel">Cancel</button>
+        <button class="btn primary" type="submit">Apply</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -2734,9 +2750,9 @@ function openEvent(id){
   fcx.set(e?e.cancels:null);fatt.set(e?e.attach:"");syncEvForm();$("delBtn").hidden=!e;$("delBtn").textContent="Delete";$("f-err").hidden=true;
   $("overlay").hidden=false;setTimeout(()=>f.title.focus(),30);
 }
-function closeDlg(){["overlay","overlay2","overlay3","overlay4","overlay5","overlay6","overlay7","overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16"].forEach(i=>$(i).hidden=true);closeChg()}
+function closeDlg(){["overlay","overlay2","overlay3","overlay4","overlay5","overlay6","overlay7","overlay8","overlay9","overlay11","overlay12","overlay13","overlay14","overlay15","overlay16","overlay17"].forEach(i=>$(i).hidden=true);closeChg()}
 $("cancelBtn").onclick=cancelDlg;$("nCancel").onclick=closeDlg;
-[$("overlay"),$("overlay2"),$("overlay3"),$("overlay4"),$("overlay5"),$("overlay6"),$("overlay7"),$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16")].forEach(o=>o.addEventListener("click",e=>{if(e.target===o){dlgRet=null;closeDlg()}}));
+[$("overlay"),$("overlay2"),$("overlay3"),$("overlay4"),$("overlay5"),$("overlay6"),$("overlay7"),$("overlay8"),$("overlay9"),$("overlay11"),$("overlay12"),$("overlay13"),$("overlay14"),$("overlay15"),$("overlay16"),$("overlay17")].forEach(o=>o.addEventListener("click",e=>{if(e.target===o){dlgRet=null;closeDlg()}}));
 $("evForm").addEventListener("submit",ev=>{
   ev.preventDefault();
   const t=f.title.value.trim(),d=f.date.value,err=m=>{$("f-err").textContent=m;$("f-err").hidden=false};
@@ -2910,7 +2926,7 @@ function renderWeekly(){
     const eb=document.querySelector(".sunday-head .eyebrow");if(eb)eb.textContent=(cx.size||reps.length||lbl)?"This Sunday · "+shortDate(sk).replace(/^\w+, /,""):"Every Sunday"}
   document.querySelectorAll("[data-weekly]").forEach(box=>{
     box.replaceChildren();
-    for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d);if(!items.length)continue;
+        for(let d=0;d<7;d++){const items=wk.filter(w=>w.dow===d);if(!items.length)continue;
       box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...items.map(wkItem))))}
     if(!box.children.length)box.append(el("p",{className:"empty-note",textContent:"No weekly events are listed right now."}));
   });
@@ -2919,6 +2935,7 @@ function renderWeekly(){
     box.append(el("div",{className:"day"},el("h3",{textContent:"Monthly Events"}),el("ul",{},...ms.slice().sort((a,b)=>(a.mode===b.mode?0:a.mode==="nth"?-1:1)||(a.mode==="day"?(+a.day)-(+b.day):((+a.n===-1?6:+a.n)-(+b.n===-1?6:+b.n))||((+a.dow)-(+b.dow)))||(a.start||"").localeCompare(b.start||"")).map(m=>
       el("li",{},el("time",{textContent:m.start?fmtTime(m.start):""}),el("span",{},el("span",{className:"wk-title",textContent:m.title}),el("small",{className:"wk-loc",textContent:moRule(m)}),wkLoc(m),wkAuds(m),m.note?el("small",{className:"wk-note keep-lines",textContent:m.note}):null))))));
   });
+  renderPageSched();
   const byId=Object.fromEntries(wk.map(w=>[w.id,w]));
   document.querySelectorAll("[data-wk]").forEach(n=>{const w=byId[n.dataset.wk];if(!w)return;const f=n.dataset.fmt,D=DAYNAMES[w.dow];
     const t=f==="day"?D+", "+fmtTime(w.start):f==="days"?D+"s, "+fmtTime(w.start):f==="daysrange"?D+"s, "+fmtSpan(w):fmtTime(w.start);
@@ -3157,6 +3174,44 @@ function openChangeOne(id,ret){const c=id?(state.schedChanges||[]).find(x=>x.id=
 function removeSc(id){const c=(state.schedChanges||[]).find(x=>x.id===id);state.schedChanges=(state.schedChanges||[]).filter(x=>x.id!==id);
   published("Regular activities are back on"+(c?" "+shortDate(c.date):"")+".");savedDlg()}
 $("overlay5").querySelector(".dialog").classList.remove("single");
+
+/* superscript number endings (1st, 2nd, 3rd, 4th) in visible text */
+(function(){const RX=/(\d)(st|nd|rd|th)\b/g,SKIP=/^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|TITLE|SUP|CODE|PRE)$/;
+function fix(root){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{for(let p=n.parentNode;p&&p!==document;p=p.parentNode){if(p.nodeType===1&&(SKIP.test(p.tagName)||p.isContentEditable||p.classList.contains("no-sup")))return NodeFilter.FILTER_REJECT}RX.lastIndex=0;return RX.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+  const list=[];while(w.nextNode())list.push(w.currentNode);
+  for(const n of list){const t=n.nodeValue,f=document.createDocumentFragment();let i=0;RX.lastIndex=0;let m;while((m=RX.exec(t))){f.append(t.slice(i,m.index+1));const s=document.createElement("sup");s.className="ord";s.textContent=m[2];f.append(s);i=m.index+m[0].length}f.append(t.slice(i));n.replaceWith(f)}}
+let q=false;const run=()=>{q=false;obs.disconnect();try{fix(document.body)}catch(e){}obs.observe(document.body,{childList:true,subtree:true,characterData:true})};
+const obs=new MutationObserver(()=>{if(!q){q=true;requestAnimationFrame(run)}});
+if(document.body)run();else document.addEventListener("DOMContentLoaded",run);})();
+/* When We Meet on ministry pages: lines linked to weekly activities (day and time always from the schedule) */
+const PS_PAGES={kids:"Foundations Kids",students:"Vertical Students"};let psPage=null,psId=0;
+function psRows(pg){return((state.pageSched||{})[pg])||[]}
+function psItem(r){const w=(state.weekly||[]).find(x=>x.id===r.wid);if(!w)return null;return r.custom?{...w,title:r.name||w.title,loc:r.loc||"",note:r.note||"",auds:r.aud?[r.aud]:[]}:w}
+function renderPageSched(){document.querySelectorAll("[data-pagesched]").forEach(box=>{const rows=psRows(box.dataset.pagesched),items=rows.map(psItem).filter(Boolean);box.replaceChildren();
+  for(let d=0;d<7;d++){const its=items.filter(w=>w.dow===d).sort((a,b)=>(a.start||"").localeCompare(b.start||""));if(!its.length)continue;box.append(el("div",{className:"day"},el("h3",{textContent:DAYNAMES[d]}),el("ul",{},...its.map(wkItem))))}
+  if(!items.length)box.append(el("p",{className:"empty-note",textContent:"Meeting times will be listed here soon."}));
+  if(canEditFlag&&items.length<rows.length)box.append(el("p",{className:"err",textContent:"Staff Only: a line here is linked to an activity that was removed from the weekly schedule. Use Edit When We Meet to fix it."}))})}
+function psRow(r){const row=el("div",{className:"ps-row"});const L=(t,i,c)=>el("label",{className:c||""},t,i);
+  const act=el("select",{className:"ps-wid"});act.append(el("option",{value:"",textContent:"Choose an activity…"}));sortWk([...(state.weekly||[])]).forEach(w=>act.append(el("option",{value:w.id,textContent:DAYNAMES[w.dow]+" · "+fmtTime(w.start)+" · "+w.title})));act.value=r.wid||"";
+  const rn="psm"+(++psId),r1=el("input",{type:"radio",name:rn,value:"same"}),r2=el("input",{type:"radio",name:rn,value:"custom"});(r.custom?r2:r1).checked=true;
+  const nm=el("input",{className:"ps-name",maxLength:90,value:r.name||""}),au=el("select",{className:"ps-aud"});au.append(el("option",{value:"",textContent:"(Not Shown)"}));for(const a in AUDS)au.append(el("option",{value:a,textContent:AUDS[a]}));au.value=r.aud||"";
+  const lo=el("input",{className:"ps-loc",maxLength:80,value:r.loc||""}),no=el("textarea",{className:"ps-note",maxLength:300});no.value=r.note||"";
+  const cf=el("div",{className:"ps-custom"},L("Name",nm,"full"),L("Who It’s For",au),L("Location",locPicker(lo)),L("Details",no,"full"));
+  const prev=el("small",{className:"ps-prev"});const wOf=()=>(state.weekly||[]).find(x=>x.id===act.value);
+  const sync=()=>{const w=wOf();cf.style.display=r2.checked?"":"none";prev.style.display=r1.checked&&w?"":"none";
+    if(w)prev.textContent="Shows: "+[w.title,w.loc,evAuds(w).map(a=>"For "+AUDS[a]).join(", "),w.note].filter(Boolean).join(" · ");nm.placeholder=w?w.title:""};
+  r2.onchange=()=>{const w=wOf();if(w&&!nm.value&&!lo.value&&!no.value){nm.value=w.title;lo.value=w.loc||"";if(lo._syncLoc)lo._syncLoc();no.value=w.note||"";au.value=evAuds(w)[0]||""}sync()};r1.onchange=sync;act.onchange=sync;
+  row.append(L("Schedule Activity (Sets the Day and Time)",act),el("div",{className:"ps-mode",role:"group"},el("label",{},r1,"Same as the Schedule"),el("label",{},r2,"Custom Details for This Page")),prev,cf,el("div",{},gBtn("Remove Line","ghost small",()=>row.remove())));sync();return row}
+function openPS(pg){closeDlg();psPage=pg;$("dlg17Title").textContent="Edit When We Meet · "+PS_PAGES[pg];const rows=psRows(pg);$("psList").replaceChildren(...(rows.length?rows:[{}]).map(psRow));$("ps-err").hidden=true;$("overlay17").hidden=false;$("overlay17").querySelector(".dialog").scrollTop=0}
+document.querySelectorAll(".ps-edit").forEach(b=>b.onclick=()=>openPS(b.dataset.page));
+$("psAdd").onclick=()=>{const r=psRow({});$("psList").append(r);r.scrollIntoView({block:"nearest"});r.querySelector(".ps-wid").focus()};
+$("psCancel").onclick=closeDlg;
+$("psForm").addEventListener("submit",ev=>{ev.preventDefault();const err=m=>{$("ps-err").textContent=m;$("ps-err").hidden=false};const out=[];
+  for(const row of $("psList").querySelectorAll(".ps-row")){const wid=row.querySelector(".ps-wid").value,custom=row.querySelector('input[value="custom"]').checked;
+    const name=row.querySelector(".ps-name").value.trim(),loc=normLoc(row.querySelector(".ps-loc").value.trim()),note=row.querySelector(".ps-note").value.replace(/\r/g,"").trim(),aud=row.querySelector(".ps-aud").value;
+    if(!wid){if(custom&&(name||loc||note))return err("Each line needs a schedule activity, which sets its day and time.");continue}
+    if(custom){if(loc)rememberLocation(loc);out.push({wid,custom:true,name,aud,loc,note})}else out.push({wid})}
+  state.pageSched={...(state.pageSched||{}),[psPage]:out};published("When We Meet updated on "+PS_PAGES[psPage]+".")});
 
 /* Manage Schedule */
 function manage(tab){msTab=tab||msTab;dlgRet=null;const re={fn:()=>manage(msTab),save:true};
@@ -4082,7 +4137,7 @@ renderAll();show();
     if(!window.claude||!claude.use)return;
     art=await claude.use("artifact");if(!art)return;
     const u=await claude.use("user");
-    if(u&&await u.canEdit()){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add").forEach(b=>b.hidden=false);canEditFlag=true;document.querySelectorAll(".ls-edit").forEach(b=>b.hidden=false);renderNotice();renderPhotos()}
+    if(u&&await u.canEdit()){toggles.forEach(t=>t.hidden=false);document.querySelectorAll(".ms-edit,.hero-add,.doc-add,.ps-edit").forEach(b=>b.hidden=false);canEditFlag=true;document.querySelectorAll(".ls-edit").forEach(b=>b.hidden=false);renderNotice();renderPhotos()}
     try{assetsApi=await claude.use("assets")}catch(e){assetsApi=null}
   }catch(e){}
 })();
