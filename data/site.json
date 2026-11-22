@@ -3498,22 +3498,6 @@
    "cat": "bible"
   },
   {
-   "id": "wmvxceknqecrq",
-   "dow": 0,
-   "start": "18:00",
-   "end": "19:00",
-   "title": "Foundations Kids Ministry",
-   "loc": "Multi-Purpose Building",
-   "note": "Age 3 – 5th Grade",
-   "cats": [
-    "bible"
-   ],
-   "auds": [
-    "kids"
-   ],
-   "cat": "bible"
-  },
-  {
    "id": "deepdive",
    "dow": 0,
    "start": "18:00",
@@ -3526,6 +3510,22 @@
    ],
    "auds": [
     "adults"
+   ],
+   "cat": "bible"
+  },
+  {
+   "id": "wmvxceknqecrq",
+   "dow": 0,
+   "start": "18:00",
+   "end": "19:00",
+   "title": "Foundations Kids Ministry",
+   "loc": "Multi-Purpose Building",
+   "note": "Ages 3 – 5th Grade",
+   "cats": [
+    "bible"
+   ],
+   "auds": [
+    "kids"
    ],
    "cat": "bible"
   },
