@@ -3443,19 +3443,7 @@
    "auds": [
     "all"
    ],
-   "cat": "bible",
-   "classes": [
-    {
-     "aud": "students",
-     "loc": "Youth Suite",
-     "note": "Middle & High School Youth"
-    },
-    {
-     "aud": "kids",
-     "loc": "Multi-Purpose Building",
-     "note": "Classes for All Ages"
-    }
-   ]
+   "cat": "bible"
   },
   {
    "id": "worship",
@@ -3471,15 +3459,7 @@
    "auds": [
     "all"
    ],
-   "cat": "worship",
-   "classes": [
-    {
-     "aud": "kids",
-     "name": "Children’s Church",
-     "loc": "",
-     "note": "Ages 3 – 5th Grade\nDismissed during worship."
-    }
-   ]
+   "cat": "worship"
   },
   {
    "id": "wmvxceknqwzwr",
@@ -3520,7 +3500,7 @@
    "end": "19:00",
    "title": "Foundations Kids Ministry",
    "loc": "Multi-Purpose Building",
-   "note": "Ages 3 – 5th Grade",
+   "note": "Age 3 – 5th Grade",
    "cats": [
     "bible"
    ],
@@ -3825,5 +3805,50 @@
   "RHBC Apparel Orders (last day)",
   "Basketball Meeting",
   "Creative Ministries Team begins decorating Church Campus for Christmas"
- ]
+ ],
+ "pageSched": {
+  "kids": [
+   {
+    "wid": "ss",
+    "custom": true,
+    "name": "Sunday School",
+    "aud": "kids",
+    "loc": "",
+    "note": "Classes for All Ages"
+   },
+   {
+    "wid": "worship",
+    "custom": true,
+    "name": "Children’s Church",
+    "aud": "kids",
+    "loc": "",
+    "note": "Age 3 – 5th Grade\nDismissed during worship; pick up in classrooms afterward"
+   },
+   {
+    "wid": "wmvxceknqecrq"
+   },
+   {
+    "wid": "garas"
+   },
+   {
+    "wid": "mf"
+   }
+  ],
+  "students": [
+   {
+    "wid": "ss",
+    "custom": true,
+    "name": "Sunday School",
+    "aud": "students",
+    "loc": "Youth Room, Multi-Purpose Building",
+    "note": "Middle & High School Youth"
+   },
+   {
+    "wid": "wmvxceknqwzwr"
+   },
+   {
+    "wid": "vertical"
+   }
+  ]
+ }
 }
