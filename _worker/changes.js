@@ -40,7 +40,7 @@ const FIELD = {
   text: "text", reg: "registration link", links: "links", name: "name", role: "role", phone: "phone",
   email: "email", bio: "bio", ini: "initials", photo: "photo", img: "photo", a: "file", t: "title",
   cap: "caption", year: "year", dow: "day", n: "which week", mode: "repeat pattern", skip: "skipped dates",
-  moves: "moved dates", u: "link", attach: "attachment", ids: "what's affected", wid: "activity",
+  moves: "moved dates", classes: "classes", u: "link", attach: "attachment", ids: "what's affected", wid: "activity",
 };
 const BULLETIN_FIELD = { a: "PDF", t: "special day", s: "message" };
 const MESSAGE_FIELD = { title: "message title", scr: "Scripture", by: "speaker", series: "series" };
