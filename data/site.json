@@ -3447,12 +3447,12 @@
    "classes": [
     {
      "aud": "students",
-     "loc": "Youth Room, Multi-Purpose Building",
+     "loc": "Youth Suite",
      "note": "Middle & High School Youth"
     },
     {
      "aud": "kids",
-     "loc": "",
+     "loc": "Multi-Purpose Building",
      "note": "Classes for All Ages"
     }
    ]
@@ -3477,7 +3477,7 @@
      "aud": "kids",
      "name": "Children’s Church",
      "loc": "",
-     "note": "Age 3 – 5th Grade\nDismissed during worship; pick up in classrooms afterward"
+     "note": "Ages 3 – 5th Grade\nDismissed during worship."
     }
    ]
   },
