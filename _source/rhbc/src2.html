@@ -2729,7 +2729,14 @@ function renderAll(){safe("Weekly Schedule",renderWeekly,null,"schedule");safe("
 }
 $("prevM").onclick=()=>calStep(-1);
 $("nextM").onclick=()=>calStep(1);
-$("todayBtn").onclick=()=>{view=new Date(now.getFullYear(),now.getMonth(),1);selected=TODAY;renderGrid();renderDay()};
+/* Today: stay in the chosen view and bring today onto the screen */
+function showToday(){
+  const sel=calMode==="month"?"#grid .cell.today":calMode==="week"?"#agView .wk-col.today":calMode==="day"?"#agView .dyview":"#agToday";
+  const n=document.querySelector(sel);if(!n)return;
+  const hd=document.querySelector("header.top"),top=(hd?hd.getBoundingClientRect().height:0)+8,r=n.getBoundingClientRect();
+  if(r.top>=top&&r.top<innerHeight-Math.min(r.height,160))return;
+  scrollToEl(n)}
+$("todayBtn").onclick=()=>{view=new Date(now.getFullYear(),now.getMonth(),1);selected=TODAY;renderGrid();renderDay();requestAnimationFrame(showToday)};
 $("dows").append(...DOWS.map(d=>el("div",{className:"dow",textContent:d})));
 setCalMode(calMode);
 
