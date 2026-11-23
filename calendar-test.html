@@ -659,8 +659,8 @@ a.card:hover{border-color:var(--muted)}
 .ag-date{display:grid;justify-items:center;align-content:start;gap:2px;padding-top:10px;text-align:center}
 .ag-date small{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .ag-date b{font-family:var(--display);font-weight:400;font-size:2rem;line-height:1}
-.ag-day.today .ag-date b{color:var(--brand-hi)}
-.ag-day.today .ag-date small{color:var(--brand-hi)}
+.ag-day.today .ag-date b{background:var(--brand);color:var(--on-brand);width:46px;height:46px;display:grid;place-items:center;border-radius:50%;margin:2px 0}
+@media (max-width:640px){.ag-day.today .ag-date b{width:40px;height:40px}}
 .ag-day.past{opacity:.6}
 .ag-day .ev-list{margin:0}
 .ag-day .ev:first-child{border-top:0}
