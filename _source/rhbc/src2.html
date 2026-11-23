@@ -2405,9 +2405,9 @@ const fromKey=k=>{const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d
 const now=new Date(); const TODAY=keyOf(now);
 const fmtTime=t=>{if(!t)return"";let [h,m]=t.split(":").map(Number);const ap=h>=12?"PM":"AM";h=h%12||12;return h+":"+pad(m)+" "+ap};
 const fmtRange=e=>e.start?(fmtTime(e.start)+(e.end?" – "+fmtTime(e.end):"")):"All day";
-/* Calendar page times: short style, 9:45a and 12:00p */
-const calT=t=>{if(!t)return"";const[h,m]=t.split(":").map(Number);return (h%12||12)+":"+pad(m||0)+(h<12?"a":"p")};
-const calRange=e=>e.start?(calT(e.start)+(e.end?" – "+calT(e.end):"")):"All Day";
+/* Calendar page times: full style, 9:45 AM and 12:15 PM (Sam's choice) */
+const calT=fmtTime;
+const calRange=fmtRange;
 const longDate=k=>fromKey(k).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
 const shortDate=k=>fromKey(k).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
 const sortEv=(a,b)=>(a.date+(a.start||"00:00")).localeCompare(b.date+(b.start||"00:00"));
