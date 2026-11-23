@@ -13,7 +13,7 @@ async def main():
         if os.path.isfile(fp):return await route.fulfill(path=fp)
         return await route.fulfill(status=404,body='nf')
       return await route.abort()
-    for mode in ['month','agenda']:
+    for mode in ['month','agenda','week','day']:
       for vp,dark in [((1280,900),False),((390,900),True)]:
         c=await b.new_context(viewport={'width':vp[0],'height':vp[1]},color_scheme='dark' if dark else 'light');await c.route('**/*',h);pg=await c.new_page()
         errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
