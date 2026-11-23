@@ -2405,6 +2405,9 @@ const fromKey=k=>{const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d
 const now=new Date(); const TODAY=keyOf(now);
 const fmtTime=t=>{if(!t)return"";let [h,m]=t.split(":").map(Number);const ap=h>=12?"PM":"AM";h=h%12||12;return h+":"+pad(m)+" "+ap};
 const fmtRange=e=>e.start?(fmtTime(e.start)+(e.end?" – "+fmtTime(e.end):"")):"All day";
+/* Calendar page times: short style, 9:45a and 12:00p */
+const calT=t=>{if(!t)return"";const[h,m]=t.split(":").map(Number);return (h%12||12)+":"+pad(m||0)+(h<12?"a":"p")};
+const calRange=e=>e.start?(calT(e.start)+(e.end?" – "+calT(e.end):"")):"All Day";
 const longDate=k=>fromKey(k).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
 const shortDate=k=>fromKey(k).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
 const sortEv=(a,b)=>(a.date+(a.start||"00:00")).localeCompare(b.date+(b.start||"00:00"));
@@ -2573,7 +2576,6 @@ function renderFilters(){
   const sw=(label,on,fn)=>{const b=el("button",{type:"button",className:"fsw"},el("span",{className:"fsw-track"}),label);b.setAttribute("aria-pressed",String(on));b.onclick=fn;return b};
   f.append(el("div",{className:"frow fsw-row"},sw("Weekly Services",showWeekly,()=>{showWeekly=!showWeekly;redraw()}),sw("Monthly Events",showMonthly,()=>{showMonthly=!showMonthly;redraw()}),sw("One-Time Events",showOther,()=>{showOther=!showOther;redraw()})));
 }
-function shortT(t){if(!t)return"";const[h,m]=t.split(":").map(Number);return (h%12||12)+(m?":"+String(m).padStart(2,"0"):"")+(h<12?"a":"p")}
 function weekStart(k){const d=fromKey(k);d.setDate(d.getDate()-d.getDay());return d}
 function calLabel(){const L=$("monthLabel");
   if(calMode==="week"){const a=weekStart(selected),b=new Date(a);b.setDate(a.getDate()+6);
@@ -2597,7 +2599,7 @@ function renderGrid(){
     cell.setAttribute("aria-label",longDate(k)+(evs.length?", "+evs.length+" event"+(evs.length>1?"s":""):""));
     cell.append(el("span",{className:"n",textContent:String(d.getDate())}));
     const special=evs.filter(e=>!e.weekly),weekly=evs.filter(e=>e.weekly);
-    for(const e of evs){const p=el("span",{className:"pill"+(e.weekly?" weekly":""),style:"--cat:"+evColor(e)});if(e.start&&!e.change)p.append(el("span",{className:"pt",textContent:shortT(e.start)}));p.append(e.title);p.title=(e.start&&!e.change?fmtRange(e)+" · ":"")+e.title;cell.append(p)}
+    for(const e of evs){const p=el("span",{className:"pill"+(e.weekly?" weekly":""),style:"--cat:"+evColor(e)});if(e.start&&!e.change)p.append(el("span",{className:"pt",textContent:calT(e.start)}));p.append(e.title);p.title=(e.start&&!e.change?calRange(e)+" · ":"")+e.title;cell.append(p)}
     if(special.length){const dots=el("span",{className:"dots"});for(const e of special)dots.append(el("i",{style:"--cat:"+evColor(e)}));cell.append(dots)}
     cell.onclick=()=>{selected=k;hideDpop();renderGrid();renderDay();dayJump()};
     if(evs.length)cell.dataset.k=k;
@@ -2611,7 +2613,7 @@ function setCalMode(m){calMode=m;try{localStorage.setItem("rhbc-calview",m)}catc
   calLabel();safe("Calendar Agenda View",renderAgenda,"agView")}
 function calWkItem(e){
   const li=el("li",{className:"wk-ev"+(e.weekly?" weekly":""),style:"--cat:"+evColor(e)});
-  if(!e.change)li.append(el("span",{className:"t",textContent:fmtRange(e)}));else li.append(el("span",{className:"t",textContent:"Schedule Change"}));
+  if(!e.change)li.append(el("span",{className:"t",textContent:calRange(e)}));else li.append(el("span",{className:"t",textContent:"Schedule Change"}));
   li.append(el("span",{className:"n",textContent:e.title}));
   (e.labels||[]).filter(l=>!l.ovr).forEach(l=>li.append(el("span",{className:"l",textContent:l.title})));
   if(e.loc)li.append(el("span",{className:"w",textContent:e.loc}));
@@ -2663,7 +2665,7 @@ function hideDpop(){clearTimeout(dpT);dpop.hidden=true;dpCell=null}
 function showDpop(cell){
   const k=cell.dataset.k,evs=eventsOn(k);if(!evs.length)return hideDpop();dpCell=cell;
   const ul=el("ul");
-  for(const e of evs.slice(0,8)){const li=el("li",{className:e.weekly?"weekly":"",style:"--cat:"+evColor(e)},el("i"),el("div",{},el("div",{className:"t",textContent:fmtRange(e)}),el("div",{className:"n",textContent:e.title})));
+  for(const e of evs.slice(0,8)){const li=el("li",{className:e.weekly?"weekly":"",style:"--cat:"+evColor(e)},el("i"),el("div",{},el("div",{className:"t",textContent:calRange(e)}),el("div",{className:"n",textContent:e.title})));
     {const lc=wkLoc(e),au=wkAuds(e);if(lc)li.lastChild.append(lc);if(au)li.lastChild.append(au)}ul.append(li)}
   dpop.replaceChildren(el("h4",{},longDate(k),el("span",{textContent:evs.length+(evs.length>1?" events":" event")})),ul);
   if(evs.length>8)dpop.append(el("p",{className:"hint2",textContent:"+"+(evs.length-8)+" more. Click the day to see them all."}));
@@ -2685,7 +2687,7 @@ function evRow(e,withDate){
   if(e.monthly)h.append(el("span",{className:"tag mo-tag",textContent:e.movedFrom?"Moved from "+shortDate(e.movedFrom).replace(/^\w+, /,""):e.mode==="day"?ordDay(+e.day)+" of Each Month":(e.n==-1?"Last":ORD[e.n])+" "+DAYNAMES[e.dow]+" of the Month"}));
   const when=el("div",{className:"when"});
   if(withDate)when.append(el("span",{className:"wd",textContent:shortDate(e.date)}),el("span",{className:"wsep",textContent:" · "}));
-  when.append(el("span",{className:"wt",textContent:e.change?"Schedule Change":fmtRange(e)}));
+  when.append(el("span",{className:"wt",textContent:e.change?"Schedule Change":calRange(e)}));
   const info=el("div",{style:"min-width:0"},when,h);
   const lc=wkLoc(e),au=wkAuds(e);if(lc||au)info.append(el("div",{className:"ev-meta"},lc,au));
   const body=el("div",{className:"ev-body"});
