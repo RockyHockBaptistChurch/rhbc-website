@@ -3606,14 +3606,7 @@
    "cat": "music"
   }
  ],
- "alert": {
-  "kind": "cancel",
-  "title": "Closed due to snow.",
-  "details": "",
-  "url": "",
-  "urlText": "",
-  "until": "2026-11-24"
- },
+ "alert": null,
  "photos": [
   {
    "id": "phmvukd3sh0",
